@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/styles.css">
+<script src="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/_ds_bundle.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,400&family=Frank+Ruhl+Libre:wght@300..700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --color-bg:#FCFCFB; --color-surface:#F9F9F7; --color-text:#2E2C27;
+    --color-accent:#C6613F; --color-accent-600:#AE5133; --color-accent-700:#8F4029;
+    --paper:#FCFCFB; --wash:#F9F9F7; --ink:#2E2C27; --soft:#6B6A63;
+    --grey:#B4B3A8; --hair:#E4E3DC; --clay:#C6613F; --clay-h:#AE5133; --tint:#F6EAE4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;-webkit-font-smoothing:antialiased}
+  [dir="rtl"]{font-family:"Frank Ruhl Libre","Frank Ruehl CLM",Georgia,serif}
+  a{color:var(--clay);text-decoration:none;cursor:pointer}
+  a:hover{color:var(--clay-h)}
+  button{font-family:inherit}
+  :focus-visible{outline:2px solid var(--clay);outline-offset:2px}
+  ::selection{background:var(--tint)}
+  input,textarea,select{font-family:inherit}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:.9}}
+  @keyframes shimmer{0%{opacity:.45}50%{opacity:.8}100%{opacity:.45}}
+  @keyframes riseIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<template id="__bundler_thumbnail"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="200" fill="#FCFCFB"/><path d="M60 118 C74 104 86 82 100 76 C116 70 130 92 140 100" fill="none" stroke="#2E2C27" stroke-width="3" stroke-linecap="round"/><circle cx="100" cy="76" r="7" fill="#2E2C27"/><path d="M60 126 a10 10 0 0 1 20 0" fill="none" stroke="#C6613F" stroke-width="3"/><text x="100" y="152" text-anchor="middle" font-family="Georgia,serif" font-size="22" letter-spacing="4" fill="#2E2C27">CARVO</text></svg></template>
+<div dir="{{ dir }}" style="min-height:100vh;background:var(--paper);color:var(--ink)">
+
+<sc-if value="{{ sLogin }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;display:grid;grid-template-columns:1fr;align-content:center;justify-items:center;padding:60px 24px">
+    <div style="width:100%;max-width:392px">
+      <div style="font-size:22px;font-weight:600;letter-spacing:.18em">CARVO</div>
+      <div style="font-size:12px;color:var(--grey);margin-top:5px">{{ t.tagline }}</div>
+      <h1 style="font-size:29px;line-height:1.35;font-weight:600;margin:40px 0 8px">{{ t.loginTitle }}</h1>
+      <div style="font-size:14px;line-height:1.7;color:var(--soft);margin-bottom:28px">{{ t.loginSub }}</div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <label style="display:block">
+          <span style="display:block;font-size:12.5px;color:var(--soft);margin-bottom:6px">{{ t.email }}</span>
+          <input type="email" value="avi@knesset.example" style="width:100%;padding:11px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:14px;color:var(--ink)">
+        </label>
+        <label style="display:block">
+          <span style="display:block;font-size:12.5px;color:var(--soft);margin-bottom:6px">{{ t.password }}</span>
+          <input type="password" value="carvo-demo" style="width:100%;padding:11px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:14px;color:var(--ink)">
+        </label>
+        <button type="button" onClick="{{ signIn }}" style="margin-top:6px;background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.continue }}</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:26px">
+        <button type="button" onClick="{{ setHe }}" style="font-size:12.5px;padding:5px 13px;border:1px solid var(--hair);border-radius:7px;background:none;color:var(--soft);cursor:pointer">עברית</button>
+        <button type="button" onClick="{{ setEn }}" style="font-size:12.5px;padding:5px 13px;border:1px solid var(--hair);border-radius:7px;background:none;color:var(--soft);cursor:pointer">English</button>
+      </div>
+      <div style="margin-top:44px;border-top:1px solid var(--hair);padding-top:20px;font-size:12.5px;color:var(--grey);line-height:1.7">{{ t.demoNote }}</div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ sApp }}" hint-placeholder-val="{{ true }}">
+<div>
+
+  <div style="position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--hair)">
+    <div style="display:flex;align-items:center;gap:14px;padding:10px 24px">
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <button type="button" onClick="{{ toggleDrawer }}" style="border:1px solid var(--hair);background:none;border-radius:7px;padding:6px 11px;font-size:13px;color:var(--soft);cursor:pointer">☰</button>
+      </sc-if>
+      <span style="font-size:10.5px;letter-spacing:.09em;color:var(--grey);white-space:nowrap">{{ t.demoLabel }}</span>
+      <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+        <span style="font-size:12.5px;color:var(--grey);line-height:1.6">{{ t.demoStrip }}</span>
+      </sc-if>
+      <div style="margin-inline-start:auto;display:flex;gap:6px;flex:none">
+        <button type="button" onClick="{{ setHe }}" style="{{ heBtn }}">עברית</button>
+        <button type="button" onClick="{{ setEn }}" style="{{ enBtn }}">English</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:stretch">
+
+    <aside style="{{ asideStyle }}">
+      <div style="padding:0 24px 24px;display:flex;align-items:baseline;justify-content:space-between">
+        <div>
+          <div style="font-size:19px;font-weight:600;letter-spacing:.16em">CARVO</div>
+          <div style="font-size:11px;color:var(--grey);margin-top:4px">{{ t.tagline }}</div>
+        </div>
+        <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ toggleDrawer }}" style="border:none;background:none;font-size:16px;color:var(--soft);cursor:pointer">✕</button>
+        </sc-if>
+      </div>
+
+      <div style="padding:0 18px 22px">
+        <button type="button" onClick="{{ goNew }}" style="width:100%;background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:11px 14px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.startNew }}</button>
+      </div>
+
+      <nav style="display:flex;flex-direction:column;gap:20px;padding:0 12px;flex:1">
+        <sc-for list="{{ nav }}" as="g" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:1px">
+            <div style="font-size:10px;letter-spacing:.12em;color:var(--grey);padding:0 12px 8px">{{ g.label }}</div>
+            <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+              <button type="button" onClick="{{ it.go }}" style="{{ it.style }}">
+                <span>{{ it.label }}</span>
+                <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size:11.5px;color:var(--clay)">{{ it.badge }}</span>
+                </sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </sc-for>
+      </nav>
+
+      <button type="button" onClick="{{ goProfile }}" style="display:flex;align-items:center;gap:11px;padding:18px 24px 0;margin-top:18px;border:none;border-top:1px solid var(--hair);background:none;cursor:pointer;text-align:start;width:100%">
+        <span style="width:34px;height:34px;flex:none;border-radius:50%;background:var(--wash);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--soft)">{{ t.initial }}</span>
+        <span>
+          <span style="display:block;font-size:13.5px;font-weight:600;color:var(--ink)">{{ userName }}</span>
+          <span style="display:block;font-size:11.5px;color:var(--grey)">{{ t.role }}</span>
+        </span>
+      </button>
+    </aside>
+
+    <main style="{{ mainStyle }}">
+
+      <sc-if value="{{ sBrief }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <section style="background:var(--wash);border-bottom:1px solid var(--hair)">
+          <div style="{{ briefHeadPad }}">
+            <div style="font-size:13px;color:var(--soft)">{{ t.date }}</div>
+            <h1 style="{{ h1Style }}">{{ t.briefHead }}</h1>
+            <svg viewBox="0 0 840 170" style="display:block;width:100%;height:auto;margin:26px 0 6px" aria-hidden="true">
+              <path d="{{ terrain }}" fill="none" stroke="#2E2C27" stroke-width="1.6" stroke-linecap="round"></path>
+              <path d="{{ sun }}" fill="none" stroke="#C6613F" stroke-width="1.4"></path>
+              <line x1="{{ hor.0 }}" y1="119" x2="{{ hor.1 }}" y2="119" stroke="#C6613F" stroke-width="1.2" stroke-linecap="round"></line>
+              <g>
+                <sc-for list="{{ dots }}" as="d" hint-placeholder-count="5">
+                  <circle cx="{{ d.x }}" cy="{{ d.y }}" r="{{ d.r }}" fill="#2E2C27"></circle>
+                </sc-for>
+              </g>
+            </svg>
+            <div style="{{ dayGrid }}">
+              <sc-for list="{{ t.dayParts }}" as="p" hint-placeholder-count="3">
+                <div style="{{ dayCell }}">
+                  <div style="font-size:13px;font-weight:700;margin-bottom:6px">{{ p.t }}</div>
+                  <div style="font-size:13.5px;line-height:1.7;color:var(--soft)">{{ p.s }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+
+        <section style="{{ briefBodyPad }}">
+          <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;margin:0 0 20px">{{ t.needsYou }}</h2>
+          <ol style="list-style:none;margin:0 0 40px;padding:0;display:flex;flex-direction:column;gap:24px">
+            <sc-for list="{{ needs }}" as="n" hint-placeholder-count="4">
+              <li style="display:flex;gap:16px">
+                <span style="color:var(--grey);font-size:13px;min-width:16px;padding-top:3px">{{ n.num }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:15.5px;font-weight:700;line-height:1.5;margin-bottom:6px">{{ n.title }}</div>
+                  <div style="font-size:14px;line-height:1.75;color:var(--soft)">{{ n.body }}
+                    <span style="border-bottom:1px solid var(--grey);padding-bottom:1px">{{ n.src }}</span>{{ n.body2 }}</div>
+                  <sc-if value="{{ n.cta }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                      <button type="button" onClick="{{ n.analyse }}" style="background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:8px 15px;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--clay-h)">{{ n.cta }}</button>
+                      <button type="button" onClick="{{ n.analyse }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:8px;padding:8px 15px;font-size:13px;cursor:pointer" style-hover="border-color:var(--grey);color:var(--ink)">{{ t.analyseWith }}</button>
+                    </div>
+                  </sc-if>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+
+          <div style="border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:26px 0;margin:0 0 40px">
+            <div style="font-size:11.5px;letter-spacing:.07em;color:var(--clay);font-weight:700;margin-bottom:12px">{{ t.calibration }}</div>
+            <div style="font-size:19px;line-height:1.6;font-weight:600;margin-bottom:10px;text-wrap:pretty">{{ t.calBig }}</div>
+            <div style="font-size:14px;line-height:1.75;color:var(--soft);max-width:68ch">{{ t.calWhy }}</div>
+            <div style="display:flex;align-items:center;gap:14px;margin-top:15px;flex-wrap:wrap">
+              <button type="button" onClick="{{ markCalDone }}" style="{{ calBtnStyle }}">{{ calBtnLabel }}</button>
+              <button type="button" onClick="{{ openSource }}" style="background:none;border:none;padding:0;font-size:12.5px;color:var(--soft);cursor:pointer;text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px">{{ t.calSource }}</button>
+            </div>
+          </div>
+
+          <h2 style="font-size:13px;font-weight:700;letter-spacing:.06em;margin:0 0 20px">{{ t.settled }}</h2>
+          <ol style="list-style:none;margin:0 0 40px;padding:0;display:flex;flex-direction:column;gap:22px">
+            <sc-for list="{{ t.settledItems }}" as="s" hint-placeholder-count="2">
+              <li style="display:flex;gap:16px">
+                <span style="color:var(--grey);font-size:13px;min-width:16px;padding-top:3px">{{ s.n }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:15.5px;font-weight:700;line-height:1.5;margin-bottom:6px">{{ s.title }}</div>
+                  <div style="font-size:14px;line-height:1.75;color:var(--soft)">{{ s.body }}</div>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+
+          <div style="border-top:1px solid var(--hair);padding-top:26px">
+            <div style="font-size:11.5px;letter-spacing:.07em;color:var(--soft);margin-bottom:11px">{{ t.sentenceK }}</div>
+            <div style="font-size:19px;line-height:1.72;max-width:64ch;text-wrap:pretty">{{ t.sentence }}</div>
+            <div style="font-size:12.5px;color:var(--grey);margin-top:14px;line-height:1.7">{{ t.verse }}</div>
+          </div>
+        </section>
+      </div>
+      </sc-if>
+
+      <sc-if value="{{ sNew }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="max-width:760px">
+            <h1 style="font-size:31px;line-height:1.3;font-weight:600;margin:0 0 8px">{{ t.newTitle }}</h1>
+            <div style="font-size:14.5px;line-height:1.7;color:var(--soft);margin-bottom:34px;max-width:60ch">{{ t.newSub }}</div>
+
+            <label style="display:block;margin-bottom:8px">
+              <span style="display:block;font-size:15.5px;font-weight:700;margin-bottom:8px">{{ t.whatHappening }}</span>
+              <textarea rows="6" value="{{ situation }}" onChange="{{ onSituation }}" placeholder="{{ t.situationPh }}" style="width:100%;padding:14px 15px;border:1px solid var(--hair);border-radius:9px;background:var(--paper);font-size:15px;line-height:1.7;color:var(--ink);resize:vertical"></textarea>
+            </label>
+            <button type="button" onClick="{{ fillFromBrief }}" style="background:none;border:none;padding:0;font-size:12.5px;color:var(--clay);cursor:pointer;margin-bottom:32px">{{ t.useBriefItem }}</button>
+
+            <div style="font-size:11.5px;letter-spacing:.07em;color:var(--grey);margin:0 0 18px">{{ t.optional }}</div>
+            <div style="display:grid;grid-template-columns:{{ twoCol }};gap:20px 26px;margin-bottom:30px">
+              <sc-for list="{{ t.optFields }}" as="f" hint-placeholder-count="5">
+                <label style="display:block">
+                  <span style="display:block;font-size:13px;color:var(--soft);margin-bottom:6px">{{ f.label }}</span>
+                  <input type="text" value="{{ f.value }}" style="width:100%;padding:10px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:14px;color:var(--ink)">
+                </label>
+              </sc-for>
+            </div>
+
+            <div style="border:1px dashed var(--hair);border-radius:10px;padding:22px;text-align:center;margin-bottom:30px">
+              <div style="font-size:14px;margin-bottom:4px">{{ t.attach }}</div>
+              <div style="font-size:12.5px;color:var(--grey)">{{ t.attachSub }}</div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-top:1px solid var(--hair);padding-top:24px">
+              <button type="button" onClick="{{ analyse }}" style="background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:12px 20px;font-size:14.5px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.analyseCta }}</button>
+              <span style="font-size:12.5px;color:var(--grey);line-height:1.6;max-width:42ch">{{ t.analyseNote }}</span>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sError }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="max-width:520px;padding-top:40px">
+            <div style="font-size:11.5px;letter-spacing:.07em;color:var(--clay);font-weight:700;margin-bottom:14px">{{ t.errorK }}</div>
+            <h1 style="font-size:27px;line-height:1.35;font-weight:600;margin:0 0 10px">{{ t.errorTitle }}</h1>
+            <div style="font-size:14.5px;line-height:1.75;color:var(--soft);margin-bottom:26px">{{ t.errorBody }}</div>
+            <div style="display:flex;gap:10px">
+              <button type="button" onClick="{{ analyse }}" style="background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:10px 17px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.tryAgain }}</button>
+              <button type="button" onClick="{{ reportIssue }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:8px;padding:10px 17px;font-size:13.5px;cursor:pointer" style-hover="border-color:var(--grey);color:var(--ink)">{{ t.reportIssue }}</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sResult }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="max-width:820px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+              <div style="font-size:11.5px;letter-spacing:.08em;color:var(--grey)">{{ t.carvoAnalysis }}</div>
+              <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--soft)">
+                <span style="width:6px;height:6px;border-radius:50%;background:var(--clay);display:inline-block"></span>{{ t.complete }}
+              </div>
+            </div>
+            <h1 style="font-size:29px;line-height:1.35;font-weight:600;margin:0 0 6px;max-width:32ch">{{ t.resultTitle }}</h1>
+            <div style="font-size:12.5px;color:var(--grey);margin-bottom:38px">{{ t.resultMeta }}</div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec01 }}</div>
+            <div style="background:var(--wash);border-radius:10px;padding:20px 22px;margin-bottom:38px">
+              <div style="font-size:15px;line-height:1.75">{{ t.told }}</div>
+              <div style="display:grid;grid-template-columns:{{ twoCol }};gap:12px 26px;margin-top:16px;border-top:1px solid var(--hair);padding-top:16px">
+                <sc-for list="{{ t.toldFields }}" as="f" hint-placeholder-count="4">
+                  <div>
+                    <div style="font-size:11.5px;color:var(--grey);margin-bottom:3px">{{ f.label }}</div>
+                    <div style="font-size:13.5px;line-height:1.6">{{ f.value }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec02 }}</div>
+            <div style="display:flex;flex-direction:column;margin-bottom:38px">
+              <sc-for list="{{ t.identified }}" as="o" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--hair)">
+                  <span style="color:var(--clay);font-size:12px;padding-top:4px">◆</span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:14.5px;line-height:1.6;font-weight:600">{{ o.t }}</div>
+                    <div style="font-size:13px;line-height:1.7;color:var(--soft);margin-top:3px">{{ o.s }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec03 }}</div>
+            <div style="border:1px solid var(--hair);border-radius:10px;padding:20px 22px;margin-bottom:38px">
+              <div style="font-size:10.5px;letter-spacing:.1em;color:var(--clay);font-weight:700;margin-bottom:10px">{{ t.basedOn }}</div>
+              <div style="font-size:16.5px;font-weight:700;line-height:1.5">{{ t.protoName }}</div>
+              <div style="font-size:13.5px;line-height:1.75;color:var(--soft);margin-top:6px">{{ t.protoSummary }}</div>
+              <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:16px;border-top:1px solid var(--hair);padding-top:14px">
+                <span style="font-size:12.5px;color:var(--soft)">{{ t.srcDoc }}</span>
+                <span style="font-size:12.5px;color:var(--soft)">{{ t.srcSection }}</span>
+                <span style="font-size:12.5px;color:var(--soft)">{{ t.srcPage }}</span>
+                <button type="button" onClick="{{ openSource }}" style="margin-inline-start:auto;background:none;border:1px solid var(--hair);color:var(--ink);border-radius:7px;padding:7px 13px;font-size:12.5px;cursor:pointer" style-hover="border-color:var(--clay);color:var(--clay)">{{ t.viewSource }}</button>
+              </div>
+            </div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec04 }}</div>
+            <div style="padding-inline-start:18px;border-inline-start:2px solid var(--ink);margin-bottom:38px">
+              <div style="font-size:15.5px;line-height:1.8;max-width:66ch">{{ t.interp1 }}</div>
+              <div style="font-size:15.5px;line-height:1.8;max-width:66ch;margin-top:14px">{{ t.interp2 }}</div>
+            </div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec05 }}</div>
+            <div style="background:var(--tint);border-radius:10px;padding:26px 28px;margin-bottom:38px">
+              <div style="font-size:21px;line-height:1.5;font-weight:700;margin-bottom:18px;text-wrap:pretty">{{ t.recAction }}</div>
+              <div style="display:grid;grid-template-columns:{{ twoCol }};gap:18px 30px">
+                <div>
+                  <div style="font-size:11px;letter-spacing:.09em;color:var(--clay);margin-bottom:5px">{{ t.whyK }}</div>
+                  <div style="font-size:14px;line-height:1.75">{{ t.recWhy }}</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;letter-spacing:.09em;color:var(--clay);margin-bottom:5px">{{ t.expectedK }}</div>
+                  <div style="font-size:14px;line-height:1.75">{{ t.recExpected }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="font-size:11px;letter-spacing:.1em;color:var(--grey);margin-bottom:12px">{{ t.sec06 }}</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--hair);padding-top:20px">
+              <button type="button" onClick="{{ acceptAction }}" style="{{ acceptStyle }}">{{ acceptLabel }}</button>
+              <button type="button" onClick="{{ disagree }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:8px;padding:11px 18px;font-size:13.5px;cursor:pointer" style-hover="border-color:var(--grey);color:var(--ink)">{{ t.disagree }}</button>
+            </div>
+
+            <div style="border-top:1px solid var(--hair);margin-top:44px;padding-top:24px">
+              <div style="font-size:11.5px;letter-spacing:.07em;color:var(--soft);margin-bottom:10px">{{ t.sentenceK }}</div>
+              <div style="font-size:17px;line-height:1.72;max-width:62ch;text-wrap:pretty">{{ t.sentence }}</div>
+              <div style="font-size:12px;color:var(--grey);margin-top:12px;line-height:1.7">{{ t.verse }}</div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sAnalyses }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+            <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0">{{ t.historyTitle }}</h1>
+            <button type="button" onClick="{{ goNew }}" style="background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.startNew }}</button>
+          </div>
+          <div style="font-size:14px;color:var(--soft);margin-bottom:26px">{{ t.historySub }}</div>
+
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px">
+            <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="{{ t.searchPh }}" style="flex:1;min-width:220px;padding:9px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:13.5px;color:var(--ink)">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+              <button type="button" onClick="{{ f.go }}" style="{{ f.style }}">{{ f.label }}</button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ skeletons }}" as="s" hint-placeholder-count="4">
+                <div style="padding:18px 0;border-top:1px solid var(--hair)">
+                  <div style="height:13px;width:{{ s.w1 }};background:var(--hair);border-radius:3px;animation:shimmer 1.3s ease-in-out infinite"></div>
+                  <div style="height:11px;width:{{ s.w2 }};background:var(--hair);border-radius:3px;margin-top:10px;opacity:.6;animation:shimmer 1.3s ease-in-out infinite"></div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ analysesEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="border-top:1px solid var(--hair);padding:56px 0;max-width:44ch">
+              <div style="font-size:17px;font-weight:600;margin-bottom:8px">{{ t.emptyAnalyses }}</div>
+              <div style="font-size:14px;line-height:1.75;color:var(--soft);margin-bottom:18px">{{ t.emptyAnalysesSub }}</div>
+              <button type="button" onClick="{{ goNew }}" style="background:var(--clay);color:var(--paper);border:none;border-radius:8px;padding:10px 17px;font-size:13.5px;font-weight:600;cursor:pointer" style-hover="background:var(--clay-h)">{{ t.startNew }}</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ analysesShown }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ analyses }}" as="a" hint-placeholder-count="5">
+                <button type="button" onClick="{{ a.go }}" style="display:block;width:100%;text-align:start;background:none;border:none;border-top:1px solid var(--hair);padding:18px 4px;cursor:pointer" style-hover="background:var(--wash)">
+                  <span style="display:flex;gap:14px;align-items:baseline;justify-content:space-between;flex-wrap:wrap">
+                    <span style="font-size:15px;font-weight:700;line-height:1.5;color:var(--ink);flex:1;min-width:240px">{{ a.title }}</span>
+                    <span style="font-size:12px;color:var(--soft);white-space:nowrap">{{ a.status }}</span>
+                  </span>
+                  <span style="display:flex;gap:20px;flex-wrap:wrap;margin-top:7px">
+                    <span style="font-size:12.5px;color:var(--grey)">{{ a.date }}</span>
+                    <span style="font-size:12.5px;color:var(--grey)">{{ a.project }}</span>
+                    <span style="font-size:12.5px;color:var(--soft);flex:1;min-width:240px">{{ a.rec }}</span>
+                  </span>
+                </button>
+              </sc-for>
+              <div style="border-top:1px solid var(--hair)"></div>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sActions }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0 0 6px">{{ t.actionsTitle }}</h1>
+          <div style="font-size:14px;color:var(--soft);margin-bottom:26px">{{ t.actionsSub }}</div>
+          <div style="display:flex;gap:22px;border-bottom:1px solid var(--hair);margin-bottom:8px">
+            <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
+              <button type="button" onClick="{{ tb.go }}" style="{{ tb.style }}">{{ tb.label }}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ actionsEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:56px 0;max-width:44ch">
+              <div style="font-size:17px;font-weight:600;margin-bottom:8px">{{ t.emptyActions }}</div>
+              <div style="font-size:14px;line-height:1.75;color:var(--soft)">{{ t.emptyActionsSub }}</div>
+            </div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ actions }}" as="a" hint-placeholder-count="3">
+              <div style="padding:20px 0;border-bottom:1px solid var(--hair)">
+                <div style="display:flex;gap:14px;align-items:baseline;justify-content:space-between;flex-wrap:wrap">
+                  <div style="font-size:15px;font-weight:700;line-height:1.5;flex:1;min-width:240px">{{ a.title }}</div>
+                  <div style="font-size:12px;color:{{ a.color }};white-space:nowrap">{{ a.status }}</div>
+                </div>
+                <div style="font-size:13.5px;line-height:1.7;color:var(--soft);margin-top:5px;max-width:70ch">{{ a.why }}</div>
+                <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-top:12px">
+                  <span style="font-size:12.5px;color:var(--grey)">{{ a.project }}</span>
+                  <span style="font-size:12.5px;color:var(--grey)">{{ a.due }}</span>
+                  <span style="display:flex;align-items:center;gap:9px;min-width:150px">
+                    <span style="flex:1;height:3px;background:var(--hair);border-radius:2px;display:block;position:relative;overflow:hidden">
+                      <span style="{{ a.barStyle }}"></span>
+                    </span>
+                    <span style="font-size:11.5px;color:var(--grey)">{{ a.pct }}</span>
+                  </span>
+                  <button type="button" onClick="{{ a.advance }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 13px;font-size:12.5px;cursor:pointer" style-hover="border-color:var(--clay);color:var(--clay)">{{ a.next }}</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sProjects }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+            <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0">{{ t.projectsTitle }}</h1>
+            <button type="button" onClick="{{ toastSoon }}" style="background:none;border:1px solid var(--hair);color:var(--ink);border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer" style-hover="border-color:var(--clay);color:var(--clay)">{{ t.createProject }}</button>
+          </div>
+          <div style="font-size:14px;color:var(--soft);margin-bottom:26px">{{ t.projectsSub }}</div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+              <div style="padding:22px 0;border-top:1px solid var(--hair)">
+                <div style="display:flex;gap:14px;align-items:baseline;justify-content:space-between;flex-wrap:wrap">
+                  <div style="font-size:16.5px;font-weight:700;line-height:1.45;flex:1;min-width:240px">{{ p.name }}</div>
+                  <div style="font-size:12px;color:var(--soft)">{{ p.status }}</div>
+                </div>
+                <div style="display:grid;grid-template-columns:{{ twoCol }};gap:8px 30px;margin-top:10px;max-width:74ch">
+                  <div style="font-size:13.5px;line-height:1.7;color:var(--soft)"><span style="color:var(--grey)">{{ t.pointA }} </span>{{ p.a }}</div>
+                  <div style="font-size:13.5px;line-height:1.7;color:var(--soft)"><span style="color:var(--grey)">{{ t.pointB }} </span>{{ p.b }}</div>
+                </div>
+                <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:14px">
+                  <span style="display:flex;align-items:center;gap:9px;min-width:170px">
+                    <span style="flex:1;height:3px;background:var(--hair);border-radius:2px;display:block;position:relative;overflow:hidden">
+                      <span style="{{ p.barStyle }}"></span>
+                    </span>
+                    <span style="font-size:11.5px;color:var(--grey)">{{ p.pct }}</span>
+                  </span>
+                  <span style="font-size:12.5px;color:var(--grey)">{{ p.milestones }}</span>
+                  <span style="font-size:12.5px;color:var(--grey)">{{ p.last }}</span>
+                </div>
+              </div>
+            </sc-for>
+            <div style="border-top:1px solid var(--hair)"></div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sProtocols }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0 0 6px">{{ t.protocolsTitle }}</h1>
+          <div style="font-size:14px;line-height:1.7;color:var(--soft);margin-bottom:26px;max-width:62ch">{{ t.protocolsSub }}</div>
+          <input type="text" value="{{ query }}" onChange="{{ onQuery }}" placeholder="{{ t.searchProtoPh }}" style="width:100%;max-width:420px;padding:9px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:13.5px;color:var(--ink);margin-bottom:24px">
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ protocols }}" as="p" hint-placeholder-count="6">
+              <button type="button" onClick="{{ p.go }}" style="display:block;width:100%;text-align:start;background:none;border:none;border-top:1px solid var(--hair);padding:18px 4px;cursor:pointer" style-hover="background:var(--wash)">
+                <span style="display:flex;gap:14px;align-items:baseline;justify-content:space-between;flex-wrap:wrap">
+                  <span style="font-size:15.5px;font-weight:700;line-height:1.5;color:var(--ink);flex:1;min-width:240px">{{ p.name }}</span>
+                  <span style="font-size:12px;color:var(--soft);white-space:nowrap">{{ p.meta }}</span>
+                </span>
+                <span style="display:block;font-size:13.5px;line-height:1.7;color:var(--soft);margin-top:6px;max-width:74ch">{{ p.summary }}</span>
+              </button>
+            </sc-for>
+            <div style="border-top:1px solid var(--hair)"></div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sProtocol }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <button type="button" onClick="{{ goProtocols }}" style="background:none;border:none;padding:0;font-size:12.5px;color:var(--soft);cursor:pointer;margin-bottom:18px">{{ t.backProtocols }}</button>
+          <div style="max-width:760px">
+            <h1 style="font-size:29px;line-height:1.35;font-weight:600;margin:0 0 8px">{{ proto.name }}</h1>
+            <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--grey);margin-bottom:34px">
+              <span>{{ proto.status }}</span><span>{{ proto.version }}</span><span>{{ proto.source }}</span>
+            </div>
+            <sc-for list="{{ proto.sections }}" as="s" hint-placeholder-count="5">
+              <div style="margin-bottom:30px">
+                <div style="font-size:11.5px;letter-spacing:.07em;color:var(--clay);font-weight:700;margin-bottom:10px">{{ s.k }}</div>
+                <div style="font-size:15px;line-height:1.8;max-width:66ch">{{ s.v }}</div>
+              </div>
+            </sc-for>
+            <div style="border-top:1px solid var(--hair);padding-top:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+              <span style="font-size:12.5px;color:var(--soft)">{{ t.srcDoc }} · {{ t.srcPage }}</span>
+              <button type="button" onClick="{{ openSource }}" style="background:none;border:1px solid var(--hair);color:var(--ink);border-radius:7px;padding:7px 13px;font-size:12.5px;cursor:pointer" style-hover="border-color:var(--clay);color:var(--clay)">{{ t.viewSource }}</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sNotifications }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0 0 26px">{{ t.notifTitle }}</h1>
+          <div style="display:flex;flex-direction:column;max-width:720px">
+            <sc-for list="{{ t.notifications }}" as="n" hint-placeholder-count="5">
+              <div style="display:flex;gap:14px;padding:17px 0;border-top:1px solid var(--hair)">
+                <span style="{{ n.dot }}"></span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14.5px;line-height:1.6;font-weight:600">{{ n.title }}</div>
+                  <div style="font-size:12.5px;color:var(--grey);margin-top:4px">{{ n.when }}</div>
+                </div>
+              </div>
+            </sc-for>
+            <div style="border-top:1px solid var(--hair)"></div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sProfile }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="max-width:720px">
+            <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0 0 4px">{{ userName }}</h1>
+            <div style="font-size:14px;color:var(--soft);margin-bottom:34px">{{ t.role }} · {{ t.profileOffice }}</div>
+            <sc-for list="{{ t.profileBlocks }}" as="b" hint-placeholder-count="4">
+              <div style="margin-bottom:28px">
+                <div style="font-size:11.5px;letter-spacing:.07em;color:var(--grey);margin-bottom:9px">{{ b.k }}</div>
+                <div style="font-size:14.5px;line-height:1.8;max-width:64ch">{{ b.v }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ sSettings }}" hint-placeholder-val="{{ false }}">
+        <section style="{{ pagePad }}">
+          <div style="max-width:640px">
+            <h1 style="font-size:29px;line-height:1.3;font-weight:600;margin:0 0 26px">{{ t.settingsTitle }}</h1>
+
+            <div style="margin-bottom:30px">
+              <div style="font-size:11.5px;letter-spacing:.07em;color:var(--grey);margin-bottom:12px">{{ t.language }}</div>
+              <div style="display:flex;gap:8px">
+                <button type="button" onClick="{{ setHe }}" style="{{ heBtn }}">עברית</button>
+                <button type="button" onClick="{{ setEn }}" style="{{ enBtn }}">English</button>
+              </div>
+            </div>
+
+            <div style="margin-bottom:30px">
+              <div style="font-size:11.5px;letter-spacing:.07em;color:var(--grey);margin-bottom:12px">{{ t.demoControls }}</div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <button type="button" onClick="{{ toggleFail }}" style="{{ failRow }}">
+                  <span style="font-size:14px">{{ t.simFail }}</span>
+                  <span style="font-size:12.5px;color:var(--soft)">{{ failState }}</span>
+                </button>
+                <button type="button" onClick="{{ toggleEmpty }}" style="{{ emptyRow }}">
+                  <span style="font-size:14px">{{ t.simEmpty }}</span>
+                  <span style="font-size:12.5px;color:var(--soft)">{{ emptyState }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--hair);padding-top:22px">
+              <button type="button" onClick="{{ signOut }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:8px;padding:10px 17px;font-size:13.5px;cursor:pointer" style-hover="border-color:var(--grey);color:var(--ink)">{{ t.signOut }}</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <sc-if value="{{ sourceOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:60;background:rgba(46,44,39,.28)">
+      <div style="position:absolute;inset-block:0;inset-inline-end:0;width:min(520px,100%);background:var(--paper);border-inline-start:1px solid var(--hair);overflow:auto;padding:26px 28px;animation:slideIn .22s ease-out">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.09em;color:var(--clay);font-weight:700;margin-bottom:6px">{{ t.basedOn }}</div>
+            <div style="font-size:17px;font-weight:700;line-height:1.4">{{ t.srcDoc }}</div>
+            <div style="font-size:12.5px;color:var(--grey);margin-top:5px">{{ t.srcSection }} · {{ t.srcPage }}</div>
+          </div>
+          <button type="button" onClick="{{ closeSource }}" style="background:none;border:none;font-size:16px;color:var(--soft);cursor:pointer">✕</button>
+        </div>
+        <div style="font-size:14.5px;line-height:1.9;color:var(--ink)">
+          <div style="background:var(--tint);border-radius:6px;padding:12px 14px;margin-bottom:16px">{{ t.verse }}</div>
+          <sc-for list="{{ t.srcParas }}" as="p" hint-placeholder-count="3">
+            <div style="margin-bottom:14px;color:var(--soft)">{{ p.v }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sProcessing }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:70;background:var(--paper);display:grid;place-items:center;padding:40px 24px">
+      <div style="width:100%;max-width:520px">
+        <div style="height:2px;background:var(--hair);border-radius:2px;overflow:hidden;margin-bottom:34px">
+          <div style="{{ progStyle }}"></div>
+        </div>
+        <div style="font-size:24px;line-height:1.4;font-weight:600;margin-bottom:30px">{{ t.processingTitle }}</div>
+        <div style="display:flex;flex-direction:column;gap:15px">
+          <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex;gap:13px;align-items:baseline">
+              <span style="{{ s.mark }}">{{ s.glyph }}</span>
+              <span style="{{ s.text }}">{{ s.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="font-size:12.5px;color:var(--grey);margin-top:34px;line-height:1.7">{{ t.processingNote }}</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset-block-end:26px;inset-inline-start:50%;transform:translateX(-50%);z-index:80;background:var(--ink);color:var(--paper);border-radius:9px;padding:12px 20px;font-size:13.5px;box-shadow:0 8px 26px rgba(46,44,39,.18);animation:riseIn .2s ease-out">{{ toast }}</div>
+  </sc-if>
+
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;lang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;en&quot;,&quot;he&quot;],&quot;default&quot;:&quot;en&quot;,&quot;tsType&quot;:&quot;'en'|'he'&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;userName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Avi Ben-Ari&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#C6613F&quot;,&quot;options&quot;:[&quot;#C6613F&quot;,&quot;#8F4029&quot;,&quot;#0088B0&quot;,&quot;#2E2C27&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Style&quot;}}">
+const T = {
+  en: {
+    tagline: "Knowledge · Analysis · Action",
+    loginTitle: "Sign in to CARVO",
+    loginSub: "CARVO analyses situations against an approved body of knowledge, and keeps the record of what was decided and what happened.",
+    email: "Email", password: "Password", continue: "Continue",
+    demoNote: "Demonstration environment. Calendar, committee, constituent and media data are simulated. The Torah content is real — Ki Tavo, first Aliyah.",
+    demoLabel: "DEMONSTRATION",
+    demoStrip: "Committee, constituent, media and calendar data are simulated. The Torah content is real — Ki Tavo, first Aliyah.",
+    role: "Elected official", initial: "A", profileOffice: "Regional council",
+    startNew: "+ Start New Analysis", analyseWith: "Analyse with CARVO",
+    nav: { brief: "Today’s Brief", new: "New Analysis", analyses: "My Analyses", actions: "My Actions", projects: "Projects", protocols: "Protocols", notifications: "Notifications", profile: "Profile", settings: "Settings" },
+    navGroups: { main: "MAIN", work: "WORK", knowledge: "KNOWLEDGE", account: "ACCOUNT" },
+    date: "Sunday · 23 Elul · Ki Tavo, first Aliyah",
+    briefHead: "You have the office. The question today is whether you are working in it — or still running for it.",
+    dayParts: [
+      { t: "8 AM – 12 PM", s: "Committee at 10 with a vote at the end. It is the only decision today that cannot be deferred." },
+      { t: "12 – 4 PM", s: "Two faction meetings and a staff session. None of them holds a decision waiting on you." },
+      { t: "4 PM onward", s: "Interview at 5. After that the calendar is empty — your first free evening in nine days." }
+    ],
+    needsYou: "NEEDS YOU TODAY", settled: "ALREADY SETTLED",
+    needs: [
+      { title: "The committee vote at 10 — your position is known, your vote is not", body: "The text has been sitting ", src: "in the committee folder", body2: " for a week. You supported it in the previous discussion and have not said how you will vote.", cta: "Summarise the text" },
+      { title: "340 constituent messages on one subject, two weeks unanswered", body: "", src: "In constituent correspondence", body2: " — the only subject recurring more than three times as often as any other. No one on your staff covers it.", cta: "Analyse the messages" },
+      { title: "Your chief of staff is waiting on sign-off for the quarterly office plan", body: "She sent it ", src: "by email two days ago", body2: " and needs an answer to commit the budget. You have not replied. Your meeting with her is at 11.", cta: "Draft the reply" },
+      { title: "A 5 PM interview on a subject outside your portfolio", body: "The invitation arrived ", src: "by email", body2: " yesterday. The subject is drawing high public attention this week.", cta: null }
+    ],
+    calibration: "TODAY’S CALIBRATION",
+    calBig: "Before the 10 o’clock committee — decide how you vote, and write the reason in two lines before you hear anyone.",
+    calWhy: "Today’s Aliyah distinguishes three stages: to come, to possess, to dwell. Behaviour that served on the road is not necessarily right in the inheritance. Elections require reading the room before deciding. But the office has already been given — and someone who still votes according to how it will read is running, not dwelling. This is one act of “and dwell in it”.",
+    calSource: "Based on: Ki Tavo · first Aliyah · Deuteronomy 26:1 — view source",
+    calDone: "Done", calDoneAck: "Recorded",
+    settledItems: [
+      { n: "1", title: "The clause you objected to was removed from the text", body: "The committee’s legal adviser confirmed it in the committee folder on Thursday. Your objection was accepted." },
+      { n: "2", title: "The council head’s request was answered by your office", body: "The response went out from your office on Friday, and a meeting was set for next month." }
+    ],
+    sentenceK: "TODAY’S SENTENCE",
+    sentence: "I no longer need to fight for what has already been given to me. My work now is to possess it, to dwell in it, to grow from it — and to remember, even inside the success, that I am not the source.",
+    verse: "“And it shall be, when you come into the land which the Lord your God gives you as an inheritance, and you possess it and dwell in it” · Deuteronomy 26:1",
+    newTitle: "Start New Analysis",
+    newSub: "Describe the situation and let CARVO analyse it against the approved knowledge.",
+    whatHappening: "What is happening?",
+    situationPh: "Describe the situation, decision or problem you are dealing with…",
+    useBriefItem: "Use the committee vote from today’s brief",
+    briefSituation: "The committee votes at 10 this morning on the text I supported in the previous discussion. I have not announced how I will vote. Two of my advisers want me to wait and see how the room moves; the text itself has not changed in a week.",
+    optional: "OPTIONAL — ONLY WHAT IS RELEVANT",
+    optFields: [
+      { label: "What are you trying to accomplish?", value: "To vote in a way I can defend in a year." },
+      { label: "What have you already done?", value: "Supported the text in the previous discussion." },
+      { label: "What decision are you considering?", value: "Whether to announce before or after the room speaks." },
+      { label: "Who is involved?", value: "Committee members, two advisers, my chief of staff." },
+      { label: "What result are you expecting?", value: "" }
+    ],
+    attach: "Attach a supporting document", attachSub: "PDF, DOCX, TXT — optional",
+    analyseCta: "Analyze with CARVO",
+    analyseNote: "CARVO will compare the situation against 24 approved protocols and cite what it used.",
+    processingTitle: "CARVO is analysing your situation",
+    processingNote: "This is a structured comparison, not a conversation. Every conclusion will carry the source it came from.",
+    steps: ["Understanding your situation", "Reviewing relevant knowledge", "Identifying applicable protocols", "Comparing relevant context", "Preparing guidance"],
+    errorK: "SOMETHING WENT WRONG",
+    errorTitle: "CARVO couldn’t complete the analysis.",
+    errorBody: "Your situation was saved. Nothing was lost. You can run the analysis again, or report the issue and we will look at it.",
+    tryAgain: "Try Again", reportIssue: "Report Issue",
+    carvoAnalysis: "CARVO ANALYSIS", complete: "Analysis complete",
+    resultTitle: "Announcing the committee vote before the room speaks",
+    resultMeta: "Sunday · 09:12 · Committee work — winter session · 4 protocols consulted",
+    sec01: "01 — WHAT YOU TOLD CARVO",
+    sec02: "02 — WHAT CARVO IDENTIFIED",
+    sec03: "03 — RELEVANT KNOWLEDGE",
+    sec04: "04 — CARVO’S INTERPRETATION",
+    sec05: "05 — RECOMMENDED ACTION",
+    sec06: "06 — NEXT STEP",
+    told: "The committee votes at 10 this morning on the text I supported in the previous discussion. I have not announced how I will vote. Two of my advisers want me to wait and see how the room moves; the text itself has not changed in a week.",
+    toldFields: [
+      { label: "Trying to accomplish", value: "To vote in a way I can defend in a year." },
+      { label: "Already done", value: "Supported the text in the previous discussion." },
+      { label: "Decision considered", value: "Whether to announce before or after the room speaks." },
+      { label: "Who is involved", value: "Committee members, two advisers, chief of staff." }
+    ],
+    identified: [
+      { t: "The position is already formed; only the announcement is missing.", s: "You stated support in the previous discussion and no new information has arrived since." },
+      { t: "The text has been unchanged in the folder for seven days.", s: "Nothing in the material accounts for the delay." },
+      { t: "Two of the four considerations you listed are about reception, not content.", s: "Both advisers’ arguments concern how the vote will read rather than what it does." },
+      { t: "The pattern matches three earlier votes this session.", s: "In each, the announcement followed the room rather than preceding it." }
+    ],
+    basedOn: "BASED ON",
+    protoName: "Deciding before the room",
+    protoSummary: "A position already formed is announced before consultation begins; consultation after the position is stated is refinement, consultation before it is deferral. Applies when no new information has entered since the position was formed.",
+    srcDoc: "Ki Tavo — first Aliyah, Version 5",
+    srcSection: "Section: To come, to possess, to dwell",
+    srcPage: "Page 18",
+    viewSource: "View Source",
+    interp1: "CARVO reads this as a decision that has already been made and is waiting for permission. The considerations you brought are real, but three of them describe how the vote will be received — and reception is a road question, not an inheritance question.",
+    interp2: "Under the approved knowledge, waiting to see how the room moves when nothing new has arrived is the mechanism of the campaign continuing to run inside the office. The protocol does not ask you to vote differently. It asks you to fix the order: decide, state, then listen.",
+    whyK: "WHY THIS ACTION", expectedK: "EXPECTED RESULT",
+    recAction: "Write your reason in two lines, then announce your vote at the opening of the committee — before the discussion.",
+    recWhy: "The position exists and no new information has arrived. Announcing first converts the discussion from a reading of the room into a discussion of the text, and removes the appearance that your vote is negotiable.",
+    recExpected: "The committee discusses content rather than positions. Your two advisers argue against the text, not against your exposure. The pattern of three earlier votes this session is broken.",
+    accept: "Accept & Start Action", accepted: "Action started",
+    disagree: "I Disagree / Provide Feedback",
+    historyTitle: "My Analyses", historySub: "Every analysis, what CARVO recommended, and what actually happened.",
+    searchPh: "Search analyses…",
+    filters: ["All", "Action open", "Completed", "No action"],
+    emptyAnalyses: "No analyses yet.",
+    emptyAnalysesSub: "Describe a situation you are dealing with and CARVO will analyse it against the approved knowledge. The analysis and its result stay here.",
+    analyses: [
+      { title: "Announcing the committee vote before the room speaks", date: "Today · 09:12", project: "Committee work", status: "Action open", rec: "Announce at the opening, reason written first" },
+      { title: "340 constituent messages on one subject with no owner", date: "Thursday", project: "Constituent response desk", status: "In progress", rec: "Assign one owner before answering any of them" },
+      { title: "Whether to attend the regional forum", date: "12 Elul", project: "—", status: "Completed", rec: "Decline; send the deputy with a written position" },
+      { title: "Reorganising the constituent-response desk", date: "9 Elul", project: "Constituent response desk", status: "Completed", rec: "One owner per recurring subject, weekly review" },
+      { title: "The supplier decision stuck in the operations channel", date: "4 Elul", project: "Office plan, Q4", status: "No action", rec: "No intervention required; the channel resolved it" }
+    ],
+    actionsTitle: "My Actions", actionsSub: "What CARVO recommended and you accepted — and where each one stands.",
+    tabs: ["Active", "Completed", "Overdue"],
+    emptyActions: "No actions here.", emptyActionsSub: "Nothing is overdue. Accepted actions appear under Active until you record their result.",
+    actions: {
+      active: [
+        { title: "Decide the vote and write the reason in two lines", why: "Announce at the opening of the committee, before the discussion.", project: "Committee work", due: "Due today, 10:00", pct: 0, status: "Recommended", next: "Mark as Started" },
+        { title: "Reply to the chief of staff on the quarterly office plan", why: "Approve without going through it line by line; the review is a mechanism of the road.", project: "Office plan, Q4", due: "Due tomorrow", pct: 40, status: "In progress", next: "Record result" },
+        { title: "Assign an owner for the recurring constituent subject", why: "340 messages on one subject with no one on staff covering it.", project: "Constituent response desk", due: "Due Thursday", pct: 20, status: "In progress", next: "Record result" }
+      ],
+      completed: [
+        { title: "Object to clause 4 in the committee text", why: "The clause was removed and the objection accepted.", project: "Committee work", due: "Closed Thursday", pct: 100, status: "Completed", next: "View result" },
+        { title: "Answer the council head’s request through the office", why: "Answered on Friday; a meeting was set for next month.", project: "—", due: "Closed Friday", pct: 100, status: "Completed", next: "View result" }
+      ],
+      overdue: []
+    },
+    projectsTitle: "Projects", projectsSub: "Where CARVO’s analyses attach to real work.",
+    createProject: "Create Project", pointA: "Point A:", pointB: "Point B:",
+    projects: [
+      { name: "Constituent response desk", status: "Active", a: "340 messages on one subject, no owner.", b: "Every recurring subject has one named owner and a weekly review.", pct: 35, milestones: "2 of 5 milestones", last: "Last activity Thursday" },
+      { name: "Committee work — winter session", status: "Active", a: "Positions stated late, after the room.", b: "Position written and announced before every vote.", pct: 60, milestones: "3 of 5 milestones", last: "Last activity today" },
+      { name: "Office plan, Q4", status: "Planning", a: "Plan waiting on my sign-off for two days.", b: "Approved plan with budget committed and owners named.", pct: 15, milestones: "1 of 6 milestones", last: "Last activity Friday" }
+    ],
+    protocolsTitle: "Protocols", protocolsSub: "The approved knowledge CARVO analyses against. Read-only — protocols are approved by the administrator.",
+    searchProtoPh: "Search protocols…",
+    backProtocols: "← Protocols",
+    protocols: [
+      { name: "To come, to possess, to dwell", summary: "Three stages of holding a position, and which behaviour belongs to each. The road is not the inheritance.", meta: "Approved · v5 · Ki Tavo" },
+      { name: "Deciding before the room", summary: "When a position is already formed, announcement precedes consultation. Consultation before announcement is deferral.", meta: "Approved · v3 · Ki Tavo" },
+      { name: "The mechanism of the road", summary: "Habits that were correct in an earlier stage and continue running after it ended.", meta: "Approved · v2 · Ki Tavo" },
+      { name: "Answering what recurs", summary: "Thresholds for correspondence: when volume on one subject requires a named owner rather than a reply.", meta: "Approved · v4 · Ki Tavo" },
+      { name: "Delegation without abdication", summary: "What may be handed over, what must stay, and how the handover is recorded.", meta: "Approved · v1 · Ki Tavo" },
+      { name: "Speaking outside the portfolio", summary: "Conditions under which public speech beyond your responsibility serves the office rather than the person.", meta: "Approved · v2 · Ki Tavo" }
+    ],
+    protoSections: [
+      { k: "DESCRIPTION", v: "A position that has already been formed is announced before consultation begins. Consultation that follows a stated position refines it; consultation that precedes it defers the decision and transfers it to the room." },
+      { k: "WHEN DOES THIS APPLY?", v: "When a position was stated in an earlier discussion, no new information has entered the file since, and a vote or decision is scheduled." },
+      { k: "RELEVANT INDICATORS", v: "The material unchanged for several days. Advisers arguing about reception rather than content. A pattern of announcements following the room in earlier decisions." },
+      { k: "WHAT SHOULD CARVO LOOK FOR?", v: "Whether the considerations brought by the user concern the content of the decision or its reception, and whether any new information postdates the formed position." },
+      { k: "RECOMMENDED RESPONSE", v: "Write the reason in two lines, announce at the opening, then listen. Do not change the vote in response to reception alone." },
+      { k: "RELATED PROTOCOLS", v: "The mechanism of the road · To come, to possess, to dwell" }
+    ],
+    protoStatus: "Approved", protoVersion: "Version 3", protoSource: "Ki Tavo — first Aliyah",
+    notifTitle: "Notifications",
+    notifications: [
+      { title: "Your analysis is ready — announcing the committee vote.", when: "Today · 09:12", unread: true },
+      { title: "You have an action awaiting completion: decide the vote and write the reason.", when: "Today · 09:13", unread: true },
+      { title: "A project milestone requires attention — Constituent response desk.", when: "Yesterday", unread: false },
+      { title: "CARVO finished analysing the constituent correspondence.", when: "Thursday", unread: false },
+      { title: "The protocol “Answering what recurs” was updated to version 4.", when: "9 Elul", unread: false }
+    ],
+    profileBlocks: [
+      { k: "RESPONSIBILITIES", v: "Committee work in the winter session, constituent correspondence, the regional office and its quarterly plan." },
+      { k: "BACKGROUND", v: "Eleven years in business before the office; first term. Elected on the constituent-response platform." },
+      { k: "CURRENT PROJECTS", v: "Constituent response desk · Committee work — winter session · Office plan, Q4" },
+      { k: "ACCOUNT", v: "avi@knesset.example · Elected official · Joined 4 Elul" }
+    ],
+    settingsTitle: "Settings", language: "LANGUAGE", demoControls: "DEMONSTRATION CONTROLS",
+    simFail: "Simulate an analysis failure", simEmpty: "Simulate an empty account",
+    on: "On", off: "Off", signOut: "Sign out",
+    srcParas: [
+      { v: "18 · The Aliyah opens with a sequence, not a state: coming, possessing, dwelling. The verse does not treat these as one event. Each has its own behaviour, and behaviour that is correct in one is not automatically correct in the next." },
+      { v: "18 · “And you possess it” — possession here is work, not arrival. What was fought for must now be held, and holding has a different discipline from fighting." },
+      { v: "19 · “And you dwell in it” — dwelling is the third stage, and the hardest to notice when it has begun. The one who still behaves as though arriving has not yet dwelt." }
+    ],
+    toastCal: "Calibration recorded for today.", toastAccepted: "Action started — added to My Actions.",
+    toastFeedback: "Feedback recorded. CARVO will use it in the next analysis.",
+    toastSoon: "Available in the next phase.", toastReported: "Issue reported. Nothing was lost.",
+    toastAdvanced: "Status updated."
+  },
+  he: {
+    tagline: "ידע · ניתוח · פעולה",
+    loginTitle: "התחברות לקארבו",
+    loginSub: "קארבו מנתח מצבים מול גוף ידע מאושר, ושומר את התיעוד של מה שהוחלט ומה שקרה בפועל.",
+    email: "דוא״ל", password: "סיסמה", continue: "המשך",
+    demoNote: "סביבת הדגמה. נתוני היומן, הוועדה, פניות הציבור והתקשורת מדומים. התוכן התורני אמיתי — כי תבוא, עלייה ראשונה.",
+    demoLabel: "הדגמה",
+    demoStrip: "נתוני הוועדה, פניות הציבור, התקשורת והיומן מדומים. התוכן התורני אמיתי — כי תבוא, עלייה ראשונה.",
+    role: "נבחר ציבור", initial: "א", profileOffice: "מועצה אזורית",
+    startNew: "+ התחלת ניתוח חדש", analyseWith: "נתח עם קארבו",
+    nav: { brief: "התדריך של היום", new: "ניתוח חדש", analyses: "הניתוחים שלי", actions: "הפעולות שלי", projects: "פרויקטים", protocols: "פרוטוקולים", notifications: "התראות", profile: "פרופיל", settings: "הגדרות" },
+    navGroups: { main: "ראשי", work: "עבודה", knowledge: "ידע", account: "חשבון" },
+    date: "יום ראשון · כ״ג באלול · כי תבוא, עלייה ראשונה",
+    briefHead: "קיבלת את התפקיד. השאלה של היום היא אם אתה עובד בו — או עדיין רץ אליו.",
+    dayParts: [
+      { t: "8:00 – 12:00", s: "ועדה ב-10:00 עם הצבעה בסופה. זו ההכרעה היחידה היום שלא ניתן לדחות." },
+      { t: "12:00 – 16:00", s: "שתי פגישות סיעה ופגישת מטה. אין בהן החלטה שמחכה לך." },
+      { t: "16:00 והלאה", s: "ראיון ב-17:00. אחריו היומן ריק — הערב הפנוי הראשון שלך מזה תשעה ימים." }
+    ],
+    needsYou: "מה דורש אותך היום", settled: "מה כבר נסגר",
+    needs: [
+      { title: "ההצבעה בוועדה ב-10:00 — עמדתך ידועה, ההצבעה לא", body: "הנוסח מונח ", src: "בתיקיית הוועדה", body2: " שבוע. תמכת בו בדיון הקודם, ולא הודעת איך תצביע.", cta: "סכם לי את הנוסח" },
+      { title: "340 פניות באותו נושא, שבועיים בלי מענה", body: "", src: "בפניות הציבור", body2: " — הנושא היחיד שחוזר יותר מפי שלושה מכל השאר. אין לו נציג בצוות שלך.", cta: "נתח לי את הפניות" },
+      { title: "ראשת הלשכה מחכה לאישור על תוכנית הרבעון", body: "היא שלחה אותה ", src: "במייל לפני יומיים", body2: " וצריכה תשובה כדי לסגור את התקציב. לא ענית. הפגישה איתה ב-11:00.", cta: "נסח לי תשובה" },
+      { title: "ראיון ב-17:00 בנושא שאינו התיק שלך", body: "ההזמנה הגיעה ", src: "במייל", body2: " אתמול. הנושא מקבל תשומת לב ציבורית גבוהה השבוע.", cta: null }
+    ],
+    calibration: "הכיול של היום",
+    calBig: "לפני הוועדה ב-10:00 — קבע איך אתה מצביע, וכתוב את הנימוק בשתי שורות לפני שאתה שומע מישהו.",
+    calWhy: "העלייה של היום מבחינה בין שלושה שלבים: לבוא, לרשת, לשבת. התנהגות ששירתה בדרך אינה בהכרח נכונה בנחלה. בחירות דורשות לקרוא את החדר לפני שמכריעים. אבל התפקיד כבר ניתן — ומי שממשיך להצביע לפי איך זה ייקרא עדיין רץ, לא יושב. זו פעולה אחת של ״וישבת בה״.",
+    calSource: "מבוסס על: כי תבוא · עלייה ראשונה · דברים כו, א — לצפייה במקור",
+    calDone: "עשיתי", calDoneAck: "נרשם",
+    settledItems: [
+      { n: "1", title: "הסעיף שהתנגדת לו הוסר מהנוסח", body: "היועצת המשפטית של הוועדה הודיעה בתיקיית הוועדה ביום חמישי. ההשגה שלך התקבלה." },
+      { n: "2", title: "הפנייה של ראש המועצה נענתה על ידי הלשכה", body: "המענה יצא מהלשכה ביום שישי, ואושרה פגישה לחודש הבא." }
+    ],
+    sentenceK: "המשפט של היום",
+    sentence: "אני לא צריך להמשיך להילחם על מה שכבר ניתן לי; עכשיו העבודה שלי היא לרשת אותו, לשבת בו, להצמיח ממנו — ולזכור גם בתוך ההצלחה שאני לא המקור.",
+    verse: "״וְהָיָה כִּי תָבוֹא אֶל הָאָרֶץ אֲשֶׁר ה׳ אֱלֹהֶיךָ נֹתֵן לְךָ נַחֲלָה וִירִשְׁתָּהּ וְיָשַׁבְתָּ בָּהּ״ · דברים כו, א",
+    newTitle: "התחלת ניתוח חדש",
+    newSub: "תאר את המצב, וקארבו ינתח אותו מול הידע המאושר.",
+    whatHappening: "מה קורה?",
+    situationPh: "תאר את המצב, ההחלטה או הבעיה שאתה מתמודד איתה…",
+    useBriefItem: "השתמש בהצבעת הוועדה מהתדריך של היום",
+    briefSituation: "הוועדה מצביעה ב-10:00 על הנוסח שתמכתי בו בדיון הקודם. לא הודעתי איך אצביע. שני יועצים רוצים שאמתין ואראה לאן החדר זז; הנוסח עצמו לא השתנה שבוע.",
+    optional: "אופציונלי — רק מה שרלוונטי",
+    optFields: [
+      { label: "מה אתה מנסה להשיג?", value: "להצביע בצורה שאוכל להגן עליה בעוד שנה." },
+      { label: "מה כבר עשית?", value: "תמכתי בנוסח בדיון הקודם." },
+      { label: "איזו החלטה אתה שוקל?", value: "אם להודיע לפני שהחדר מדבר או אחרי." },
+      { label: "מי מעורב?", value: "חברי הוועדה, שני יועצים, ראשת הלשכה." },
+      { label: "איזו תוצאה אתה מצפה לה?", value: "" }
+    ],
+    attach: "צירוף מסמך תומך", attachSub: "PDF, DOCX, TXT — אופציונלי",
+    analyseCta: "נתח עם קארבו",
+    analyseNote: "קארבו ישווה את המצב מול 24 פרוטוקולים מאושרים ויציין במה השתמש.",
+    processingTitle: "קארבו מנתח את המצב שלך",
+    processingNote: "זו השוואה מסודרת, לא שיחה. כל מסקנה תישא איתה את המקור שממנו הגיעה.",
+    steps: ["הבנת המצב שלך", "סקירת הידע הרלוונטי", "זיהוי הפרוטוקולים החלים", "השוואת ההקשר הרלוונטי", "הכנת ההנחיה"],
+    errorK: "משהו נכשל",
+    errorTitle: "קארבו לא הצליח להשלים את הניתוח.",
+    errorBody: "המצב שתיארת נשמר. שום דבר לא אבד. אפשר להריץ את הניתוח מחדש, או לדווח ונבדוק.",
+    tryAgain: "נסה שוב", reportIssue: "דווח על בעיה",
+    carvoAnalysis: "ניתוח קארבו", complete: "הניתוח הושלם",
+    resultTitle: "הודעה על ההצבעה בוועדה לפני שהחדר מדבר",
+    resultMeta: "יום ראשון · 09:12 · עבודת הוועדה — מושב החורף · 4 פרוטוקולים",
+    sec01: "01 — מה סיפרת לקארבו",
+    sec02: "02 — מה קארבו זיהה",
+    sec03: "03 — הידע הרלוונטי",
+    sec04: "04 — הפרשנות של קארבו",
+    sec05: "05 — הפעולה המומלצת",
+    sec06: "06 — הצעד הבא",
+    told: "הוועדה מצביעה ב-10:00 על הנוסח שתמכתי בו בדיון הקודם. לא הודעתי איך אצביע. שני יועצים רוצים שאמתין ואראה לאן החדר זז; הנוסח עצמו לא השתנה שבוע.",
+    toldFields: [
+      { label: "מה אתה מנסה להשיג", value: "להצביע בצורה שאוכל להגן עליה בעוד שנה." },
+      { label: "מה כבר נעשה", value: "תמיכה בנוסח בדיון הקודם." },
+      { label: "ההחלטה הנשקלת", value: "להודיע לפני שהחדר מדבר או אחרי." },
+      { label: "מי מעורב", value: "חברי הוועדה, שני יועצים, ראשת הלשכה." }
+    ],
+    identified: [
+      { t: "העמדה כבר גובשה; חסרה רק ההודעה.", s: "הבעת תמיכה בדיון הקודם, ומאז לא נכנס מידע חדש." },
+      { t: "הנוסח מונח בתיקייה שבעה ימים בלי שינוי.", s: "אין בחומר עצמו דבר שמסביר את הדחייה." },
+      { t: "שניים מארבעת השיקולים שהעלית עוסקים בהתקבלות, לא בתוכן.", s: "טענות שני היועצים עוסקות באיך ההצבעה תיקרא, לא במה שהיא עושה." },
+      { t: "התבנית זהה לשלוש הצבעות קודמות במושב.", s: "בכל אחת מהן ההודעה באה אחרי החדר ולא לפניו." }
+    ],
+    basedOn: "מבוסס על",
+    protoName: "הכרעה לפני החדר",
+    protoSummary: "עמדה שגובשה מוכרזת לפני שההתייעצות מתחילה; התייעצות אחרי הצהרת העמדה היא חידוד, התייעצות לפניה היא דחייה. חל כשלא נכנס מידע חדש מאז שהעמדה גובשה.",
+    srcDoc: "כי תבוא — עלייה ראשונה, גרסה 5",
+    srcSection: "מקטע: לבוא, לרשת, לשבת",
+    srcPage: "עמוד 18",
+    viewSource: "צפייה במקור",
+    interp1: "קארבו קורא את זה כהחלטה שכבר התקבלה ומחכה לאישור. השיקולים שהבאת אמיתיים, אבל שלושה מהם מתארים איך ההצבעה תתקבל — והתקבלות היא שאלה של הדרך, לא של הנחלה.",
+    interp2: "לפי הידע המאושר, המתנה לראות לאן החדר זז כשלא נכנס מידע חדש היא מנגנון של המערכה שממשיך לפעול בתוך התפקיד. הפרוטוקול לא מבקש ממך להצביע אחרת. הוא מבקש לתקן את הסדר: להכריע, להודיע, ואז להקשיב.",
+    whyK: "למה הפעולה הזו", expectedK: "התוצאה הצפויה",
+    recAction: "כתוב את הנימוק בשתי שורות, ואז הודע על ההצבעה בפתיחת הוועדה — לפני הדיון.",
+    recWhy: "העמדה קיימת ולא נכנס מידע חדש. הודעה מוקדמת הופכת את הדיון מקריאה של החדר לדיון בנוסח, ומסירה את הרושם שההצבעה שלך נתונה למשא ומתן.",
+    recExpected: "הוועדה דנה בתוכן ולא בעמדות. שני היועצים יטענו נגד הנוסח, לא נגד החשיפה שלך. התבנית של שלוש ההצבעות הקודמות במושב נשברת.",
+    accept: "אשר והתחל פעולה", accepted: "הפעולה התחילה",
+    disagree: "אני לא מסכים / משוב",
+    historyTitle: "הניתוחים שלי", historySub: "כל ניתוח, מה קארבו המליץ, ומה קרה בפועל.",
+    searchPh: "חיפוש בניתוחים…",
+    filters: ["הכול", "פעולה פתוחה", "הושלם", "בלי פעולה"],
+    emptyAnalyses: "עוד לא נערכו ניתוחים.",
+    emptyAnalysesSub: "תאר מצב שאתה מתמודד איתו וקארבו ינתח אותו מול הידע המאושר. הניתוח והתוצאה שלו יישמרו כאן.",
+    analyses: [
+      { title: "הודעה על ההצבעה בוועדה לפני שהחדר מדבר", date: "היום · 09:12", project: "עבודת הוועדה", status: "פעולה פתוחה", rec: "להודיע בפתיחה, עם נימוק כתוב מראש" },
+      { title: "340 פניות באותו נושא בלי אחראי", date: "חמישי", project: "מוקד פניות הציבור", status: "בתהליך", rec: "למנות אחראי אחד לפני שעונים לאף פנייה" },
+      { title: "אם להשתתף בפורום האזורי", date: "י״ב באלול", project: "—", status: "הושלם", rec: "לסרב; לשלוח את הסגן עם עמדה כתובה" },
+      { title: "ארגון מחדש של מוקד פניות הציבור", date: "ט׳ באלול", project: "מוקד פניות הציבור", status: "הושלם", rec: "אחראי אחד לכל נושא חוזר, סקירה שבועית" },
+      { title: "ההחלטה על הספק שתקועה בערוץ התפעול", date: "ד׳ באלול", project: "תוכנית הלשכה, רבעון 4", status: "בלי פעולה", rec: "אין צורך בהתערבות; הערוץ סגר את זה" }
+    ],
+    actionsTitle: "הפעולות שלי", actionsSub: "מה שקארבו המליץ ואישרת — ואיפה כל פעולה עומדת.",
+    tabs: ["פעילות", "הושלמו", "באיחור"],
+    emptyActions: "אין פעולות כאן.", emptyActionsSub: "שום דבר לא באיחור. פעולות שאושרו מופיעות תחת ״פעילות״ עד שתתעד את התוצאה.",
+    actions: {
+      active: [
+        { title: "להכריע את ההצבעה ולכתוב את הנימוק בשתי שורות", why: "להודיע בפתיחת הוועדה, לפני הדיון.", project: "עבודת הוועדה", due: "להיום, 10:00", pct: 0, status: "מומלץ", next: "סמן שהתחלתי" },
+        { title: "להשיב לראשת הלשכה על תוכנית הרבעון", why: "לאשר בלי לעבור שורה־שורה; הבדיקה החוזרת היא מנגנון של הדרך.", project: "תוכנית הלשכה, רבעון 4", due: "למחר", pct: 40, status: "בתהליך", next: "תעד תוצאה" },
+        { title: "למנות אחראי לנושא הפניות החוזר", why: "340 פניות באותו נושא בלי אף אחד בצוות שמכסה אותו.", project: "מוקד פניות הציבור", due: "ליום חמישי", pct: 20, status: "בתהליך", next: "תעד תוצאה" }
+      ],
+      completed: [
+        { title: "להתנגד לסעיף 4 בנוסח הוועדה", why: "הסעיף הוסר וההשגה התקבלה.", project: "עבודת הוועדה", due: "נסגר בחמישי", pct: 100, status: "הושלם", next: "צפה בתוצאה" },
+        { title: "להשיב לפניית ראש המועצה דרך הלשכה", why: "נענה בשישי; נקבעה פגישה לחודש הבא.", project: "—", due: "נסגר בשישי", pct: 100, status: "הושלם", next: "צפה בתוצאה" }
+      ],
+      overdue: []
+    },
+    projectsTitle: "פרויקטים", projectsSub: "איפה הניתוחים של קארבו נפגשים עם עבודה אמיתית.",
+    createProject: "פרויקט חדש", pointA: "נקודה א׳:", pointB: "נקודה ב׳:",
+    projects: [
+      { name: "מוקד פניות הציבור", status: "פעיל", a: "340 פניות באותו נושא, בלי אחראי.", b: "לכל נושא חוזר יש אחראי בשם ובסקירה שבועית.", pct: 35, milestones: "2 מתוך 5 אבני דרך", last: "פעילות אחרונה: חמישי" },
+      { name: "עבודת הוועדה — מושב החורף", status: "פעיל", a: "עמדות נאמרות מאוחר, אחרי החדר.", b: "עמדה כתובה ומוכרזת לפני כל הצבעה.", pct: 60, milestones: "3 מתוך 5 אבני דרך", last: "פעילות אחרונה: היום" },
+      { name: "תוכנית הלשכה, רבעון 4", status: "בתכנון", a: "התוכנית מחכה לאישור שלי יומיים.", b: "תוכנית מאושרת עם תקציב סגור ואחראים בשם.", pct: 15, milestones: "1 מתוך 6 אבני דרך", last: "פעילות אחרונה: שישי" }
+    ],
+    protocolsTitle: "פרוטוקולים", protocolsSub: "הידע המאושר שקארבו מנתח מולו. לקריאה בלבד — הפרוטוקולים מאושרים על ידי המנהל.",
+    searchProtoPh: "חיפוש בפרוטוקולים…",
+    backProtocols: "← פרוטוקולים",
+    protocols: [
+      { name: "לבוא, לרשת, לשבת", summary: "שלושה שלבים של החזקת תפקיד, ואיזו התנהגות שייכת לכל אחד. הדרך אינה הנחלה.", meta: "מאושר · גרסה 5 · כי תבוא" },
+      { name: "הכרעה לפני החדר", summary: "כשעמדה כבר גובשה, ההודעה קודמת להתייעצות. התייעצות לפני הודעה היא דחייה.", meta: "מאושר · גרסה 3 · כי תבוא" },
+      { name: "מנגנון הדרך", summary: "הרגלים שהיו נכונים בשלב מוקדם וממשיכים לפעול אחרי שהוא נגמר.", meta: "מאושר · גרסה 2 · כי תבוא" },
+      { name: "מענה למה שחוזר", summary: "ספי פנייה: מתי נפח באותו נושא מחייב אחראי בשם ולא תשובה.", meta: "מאושר · גרסה 4 · כי תבוא" },
+      { name: "האצלה בלי הפקרה", summary: "מה מותר להעביר, מה חייב להישאר, ואיך ההעברה מתועדת.", meta: "מאושר · גרסה 1 · כי תבוא" },
+      { name: "דיבור מחוץ לתיק", summary: "התנאים שבהם דיבור ציבורי מעבר לאחריות משרת את התפקיד ולא את האדם.", meta: "מאושר · גרסה 2 · כי תבוא" }
+    ],
+    protoSections: [
+      { k: "תיאור", v: "עמדה שכבר גובשה מוכרזת לפני שההתייעצות מתחילה. התייעצות שבאה אחרי הצהרת עמדה מחדדת אותה; התייעצות שקודמת לה דוחה את ההחלטה ומעבירה אותה לחדר." },
+      { k: "מתי זה חל?", v: "כשעמדה נאמרה בדיון קודם, מאז לא נכנס מידע חדש לתיק, וקבועה הצבעה או הכרעה." },
+      { k: "אינדיקטורים רלוונטיים", v: "חומר שלא השתנה כמה ימים. יועצים שמתווכחים על התקבלות ולא על תוכן. תבנית של הודעות שבאו אחרי החדר בהכרעות קודמות." },
+      { k: "מה קארבו צריך לחפש?", v: "אם השיקולים שהמשתמש מביא עוסקים בתוכן ההחלטה או בהתקבלות שלה, ואם נכנס מידע חדש אחרי שהעמדה גובשה." },
+      { k: "התגובה המומלצת", v: "לכתוב את הנימוק בשתי שורות, להודיע בפתיחה, ואז להקשיב. לא לשנות את ההצבעה בגלל התקבלות בלבד." },
+      { k: "פרוטוקולים קשורים", v: "מנגנון הדרך · לבוא, לרשת, לשבת" }
+    ],
+    protoStatus: "מאושר", protoVersion: "גרסה 3", protoSource: "כי תבוא — עלייה ראשונה",
+    notifTitle: "התראות",
+    notifications: [
+      { title: "הניתוח שלך מוכן — הודעה על ההצבעה בוועדה.", when: "היום · 09:12", unread: true },
+      { title: "יש לך פעולה שממתינה להשלמה: להכריע את ההצבעה ולכתוב את הנימוק.", when: "היום · 09:13", unread: true },
+      { title: "אבן דרך בפרויקט דורשת תשומת לב — מוקד פניות הציבור.", when: "אתמול", unread: false },
+      { title: "קארבו סיים לנתח את פניות הציבור.", when: "חמישי", unread: false },
+      { title: "הפרוטוקול ״מענה למה שחוזר״ עודכן לגרסה 4.", when: "ט׳ באלול", unread: false }
+    ],
+    profileBlocks: [
+      { k: "תחומי אחריות", v: "עבודת הוועדה במושב החורף, פניות הציבור, הלשכה האזורית ותוכנית הרבעון שלה." },
+      { k: "רקע", v: "אחת עשרה שנים בעסקים לפני התפקיד; כהונה ראשונה. נבחר על בסיס מוקד פניות הציבור." },
+      { k: "פרויקטים פעילים", v: "מוקד פניות הציבור · עבודת הוועדה — מושב החורף · תוכנית הלשכה, רבעון 4" },
+      { k: "חשבון", v: "avi@knesset.example · נבחר ציבור · הצטרף ד׳ באלול" }
+    ],
+    settingsTitle: "הגדרות", language: "שפה", demoControls: "בקרות הדגמה",
+    simFail: "הדמיית כשל בניתוח", simEmpty: "הדמיית חשבון ריק",
+    on: "פועל", off: "כבוי", signOut: "התנתקות",
+    srcParas: [
+      { v: "18 · העלייה נפתחת ברצף, לא במצב: לבוא, לרשת, לשבת. הפסוק אינו מתייחס אליהם כאירוע אחד. לכל אחד התנהגות משלו, והתנהגות נכונה באחד אינה נכונה אוטומטית בבא אחריו." },
+      { v: "18 · ״וירשתה״ — ירושה כאן היא עבודה, לא הגעה. מה שנלחמו עליו צריך עכשיו להיאחז, ולאחיזה יש משמעת אחרת מללחימה." },
+      { v: "19 · ״וישבת בה״ — הישיבה היא השלב השלישי, והקשה ביותר לזהות שהתחיל. מי שממשיך להתנהג כמי שמגיע עוד לא יושב." }
+    ],
+    toastCal: "הכיול של היום נרשם.", toastAccepted: "הפעולה התחילה — נוספה לפעולות שלי.",
+    toastFeedback: "המשוב נרשם. קארבו ישתמש בו בניתוח הבא.",
+    toastSoon: "יהיה זמין בשלב הבא.", toastReported: "הדיווח נשלח. שום דבר לא אבד.",
+    toastAdvanced: "הסטטוס עודכן."
+  }
+};
+
+class Component extends DCLogic {
+  state = {
+    lang: null, screen: "brief", w: 1280, drawer: false, step: -1,
+    toast: null, sourceOpen: false, tab: 0, filter: 0, query: "",
+    situation: "", calDone: false, accepted: false, failMode: false, emptyMode: false,
+    loading: false, protoOpen: false
+  };
+
+  componentDidMount() {
+    this.onR = () => this.setState({ w: window.innerWidth });
+    window.addEventListener("resize", this.onR);
+    this.setState({ w: window.innerWidth });
+    this.applyAccent();
+  }
+  componentDidUpdate() { this.applyAccent(); }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.onR);
+    clearInterval(this.iv); clearTimeout(this.tt); clearTimeout(this.lt);
+  }
+  applyAccent() {
+    const a = this.props.accent;
+    if (a) document.documentElement.style.setProperty("--clay", a);
+  }
+
+  get lang() { return this.state.lang || this.props.lang || "en"; }
+  get t() { return T[this.lang]; }
+
+  say(msg) {
+    clearTimeout(this.tt);
+    this.setState({ toast: msg });
+    this.tt = setTimeout(() => this.setState({ toast: null }), 2800);
+  }
+
+  go(screen) {
+    const s = { screen, drawer: false, query: "" };
+    this.setState(s);
+    if (screen === "analyses") {
+      this.setState({ loading: true });
+      clearTimeout(this.lt);
+      this.lt = setTimeout(() => this.setState({ loading: false }), 900);
+    }
+    if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+  }
+
+  runAnalysis() {
+    clearInterval(this.iv);
+    this.setState({ screen: "processing", step: 0 });
+    this.iv = setInterval(() => {
+      const n = this.state.step + 1;
+      if (n >= 5) {
+        clearInterval(this.iv);
+        this.setState({ screen: this.state.failMode ? "error" : "result", step: -1 });
+        if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+      } else this.setState({ step: n });
+    }, 750);
+  }
+
+  btn(active) {
+    return "font-size:12.5px;padding:5px 13px;border-radius:7px;cursor:pointer;" + (active
+      ? "border:1px solid var(--ink);background:var(--ink);color:var(--paper);font-weight:600"
+      : "border:1px solid var(--hair);background:none;color:var(--soft)");
+  }
+  chip(active) {
+    return "font-size:12.5px;padding:7px 14px;border-radius:20px;cursor:pointer;" + (active
+      ? "border:1px solid var(--ink);background:var(--ink);color:var(--paper)"
+      : "border:1px solid var(--hair);background:none;color:var(--soft)");
+  }
+  tabStyle(active) {
+    return "background:none;border:none;padding:10px 0 12px;font-size:14px;cursor:pointer;" + (active
+      ? "color:var(--ink);font-weight:700;box-shadow:inset 0 -2px 0 var(--clay)"
+      : "color:var(--soft)");
+  }
+  navItem(active) {
+    return "display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:start;border:none;padding:8px 12px;border-radius:7px;font-size:14px;cursor:pointer;font-family:inherit;" + (active
+      ? "background:var(--wash);color:var(--ink);font-weight:600"
+      : "background:none;color:var(--soft)");
+  }
+  bar(pct) {
+    return "position:absolute;inset-block:0;inset-inline-start:0;width:" + pct + "%;background:var(--clay);border-radius:2px;display:block";
+  }
+  rowBtn(on) {
+    return "display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:start;background:none;border:1px solid " + (on ? "var(--clay)" : "var(--hair)") + ";border-radius:8px;padding:12px 14px;cursor:pointer;font-family:inherit;color:var(--ink)";
+  }
+
+  renderVals() {
+    const t = this.t, s = this.state, he = this.lang === "he";
+    const narrow = s.w < 900;
+    const scr = s.screen;
+    const userName = this.props.userName ?? (he ? "אבי בן-ארי" : "Avi Ben-Ari");
+
+    const navDef = [
+      ["main", [["brief", "brief", null]]],
+      ["work", [["new", "new", null], ["analyses", "analyses", null], ["actions", "actions", "3"], ["projects", "projects", null]]],
+      ["knowledge", [["protocols", "protocols", null]]],
+      ["account", [["notifications", "notifications", "2"], ["profile", "profile", null], ["settings", "settings", null]]]
+    ];
+    const nav = navDef.map(([gk, items]) => ({
+      label: t.navGroups[gk],
+      items: items.map(([key, navKey, badge]) => ({
+        label: t.nav[navKey], badge,
+        style: this.navItem(scr === key || (key === "protocols" && scr === "protocol")),
+        go: () => this.go(key)
+      }))
+    }));
+
+    const needs = t.needs.map((n, i) => ({
+      num: String(i + 1), title: n.title, body: n.body, src: n.src, body2: n.body2, cta: n.cta,
+      analyse: () => { this.setState({ situation: t.briefSituation }); this.go("new"); }
+    }));
+
+    const terrain = he
+      ? "M840,124 C806,120 782,108 752,92 C726,78 706,60 676,50 C650,42 630,46 604,54 C574,63 552,78 522,84 C494,90 470,80 442,70 C412,59 384,52 354,56 C322,60 296,80 266,94 C236,108 206,116 176,116 C140,116 112,108 82,112 C54,116 26,124 0,126"
+      : "M0,124 C34,120 58,108 88,92 C114,78 134,60 164,50 C190,42 210,46 236,54 C266,63 288,78 318,84 C346,90 370,80 398,70 C428,59 456,52 486,56 C518,60 544,80 574,94 C604,108 634,116 664,116 C700,116 728,108 758,112 C786,116 814,124 840,126";
+    const dots = (he
+      ? [[752, 92, 8], [676, 50, 13], [522, 84, 9], [354, 56, 11], [176, 116, 7]]
+      : [[88, 92, 8], [164, 50, 13], [318, 84, 9], [486, 56, 11], [664, 116, 7]]
+    ).map(d => ({ x: d[0], y: d[1], r: d[2] }));
+
+    const allA = s.emptyMode ? [] : t.analyses;
+    const fKey = [null, t.filters[1], t.filters[2], t.filters[3]][s.filter];
+    const q = s.query.trim().toLowerCase();
+    const analyses = allA
+      .filter(a => !fKey || a.status === fKey)
+      .filter(a => !q || (a.title + " " + a.rec + " " + a.project).toLowerCase().includes(q))
+      .map(a => ({ ...a, go: () => this.go("result") }));
+
+    const actLists = [t.actions.active, t.actions.completed, t.actions.overdue];
+    const actions = (s.emptyMode ? [] : actLists[s.tab]).map(a => ({
+      ...a, pct: a.pct + "%", barStyle: this.bar(a.pct),
+      color: a.pct === 100 ? "var(--soft)" : "var(--clay)",
+      advance: () => this.say(t.toastAdvanced)
+    }));
+
+    const protoQ = scr === "protocols" ? q : "";
+    const protocols = t.protocols
+      .filter(p => !protoQ || (p.name + " " + p.summary).toLowerCase().includes(protoQ))
+      .map((p, i) => ({ ...p, go: () => this.go("protocol") }));
+
+    const steps = t.steps.map((label, i) => {
+      const done = i < s.step, active = i === s.step;
+      return {
+        label, glyph: done ? "✓" : active ? "●" : "○",
+        mark: "font-size:13px;width:14px;flex:none;color:" + (done ? "var(--clay)" : active ? "var(--clay)" : "var(--grey)") + (active ? ";animation:pulse 1.1s ease-in-out infinite" : ""),
+        text: "font-size:15.5px;line-height:1.6;color:" + (done || active ? "var(--ink)" : "var(--grey)") + (active ? ";font-weight:600" : "")
+      };
+    });
+
+    const notifications = t.notifications.map(n => ({
+      ...n,
+      dot: "width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px;background:" + (n.unread ? "var(--clay)" : "var(--hair)")
+    }));
+
+    const pagePad = narrow ? "padding:26px 20px 60px" : "padding:38px 44px 70px";
+
+    return {
+      dir: he ? "rtl" : "ltr", t: { ...t, notifications }, userName,
+      narrow, wide: !narrow,
+      sLogin: scr === "login", sApp: scr !== "login",
+      sBrief: scr === "brief", sNew: scr === "new", sResult: scr === "result",
+      sError: scr === "error", sAnalyses: scr === "analyses", sActions: scr === "actions",
+      sProjects: scr === "projects", sProtocols: scr === "protocols", sProtocol: scr === "protocol",
+      sNotifications: scr === "notifications", sProfile: scr === "profile", sSettings: scr === "settings",
+      sProcessing: scr === "processing",
+
+      heBtn: this.btn(he), enBtn: this.btn(!he),
+      setHe: () => this.setState({ lang: "he" }), setEn: () => this.setState({ lang: "en" }),
+      signIn: () => this.go("brief"), signOut: () => this.go("login"),
+      toggleDrawer: () => this.setState({ drawer: !s.drawer }),
+      goNew: () => { this.setState({ situation: s.situation || t.briefSituation }); this.go("new"); },
+      goProfile: () => this.go("profile"), goProtocols: () => this.go("protocols"),
+
+      asideStyle: narrow
+        ? (s.drawer
+          ? "position:fixed;inset-block:0;inset-inline-start:0;z-index:50;width:272px;background:var(--paper);border-inline-end:1px solid var(--hair);padding:22px 0 20px;display:flex;flex-direction:column;overflow:auto;box-shadow:0 0 40px rgba(46,44,39,.18)"
+          : "display:none")
+        : "width:252px;flex:none;border-inline-end:1px solid var(--hair);padding:26px 0 20px;display:flex;flex-direction:column;min-height:calc(100vh - 43px);position:sticky;top:43px;align-self:flex-start",
+      mainStyle: "flex:1;min-width:0",
+      briefHeadPad: narrow ? "max-width:880px;padding:30px 20px 28px" : "max-width:880px;padding:46px 44px 36px",
+      briefBodyPad: narrow ? "padding:30px 20px 60px;max-width:880px" : "padding:40px 44px 70px;max-width:880px",
+      pagePad, h1Style: (narrow ? "font-size:28px" : "font-size:40px") + ";line-height:1.28;font-weight:600;letter-spacing:-.01em;margin:14px 0 0;text-wrap:pretty",
+      dayGrid: narrow ? "display:flex;flex-direction:column;gap:18px;margin-top:12px" : "display:grid;grid-template-columns:repeat(3,1fr);margin-top:12px",
+      dayCell: narrow ? "padding-top:16px;border-top:1px solid var(--hair)" : "padding:0 20px;border-inline-start:1px solid var(--hair)",
+      twoCol: narrow ? "1fr" : "1fr 1fr",
+
+      nav, needs, terrain, dots,
+      sun: he ? "M778,119 a17,17 0 0 1 34,0" : "M28,119 a17,17 0 0 1 34,0",
+      hor: he ? [768, 822] : [18, 72],
+
+      calBtnStyle: "border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:500;cursor:pointer;" + (s.calDone
+        ? "background:var(--wash);color:var(--soft);border:1px solid var(--hair)"
+        : "background:var(--clay);color:var(--paper)"),
+      calBtnLabel: s.calDone ? t.calDoneAck : t.calDone,
+      markCalDone: () => { this.setState({ calDone: true }); this.say(t.toastCal); },
+
+      situation: s.situation,
+      onSituation: e => this.setState({ situation: e.target.value }),
+      fillFromBrief: () => this.setState({ situation: t.briefSituation }),
+      analyse: () => this.runAnalysis(),
+      steps, progStyle: "height:2px;background:var(--clay);border-radius:2px;transition:width .6s ease;width:" + Math.max(6, ((s.step + 1) / 5) * 100) + "%",
+
+      acceptStyle: "border:none;border-radius:8px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;" + (s.accepted
+        ? "background:var(--wash);color:var(--soft);border:1px solid var(--hair)"
+        : "background:var(--clay);color:var(--paper)"),
+      acceptLabel: s.accepted ? t.accepted : t.accept,
+      acceptAction: () => { this.setState({ accepted: true }); this.say(t.toastAccepted); this.go("actions"); },
+      disagree: () => this.say(t.toastFeedback),
+      openSource: () => this.setState({ sourceOpen: true }),
+      closeSource: () => this.setState({ sourceOpen: false }),
+      sourceOpen: s.sourceOpen,
+
+      query: s.query, onQuery: e => this.setState({ query: e.target.value }),
+      filters: t.filters.map((label, i) => ({ label, style: this.chip(s.filter === i), go: () => this.setState({ filter: i }) })),
+      loading: s.loading,
+      skeletons: [{ w1: "62%", w2: "38%" }, { w1: "48%", w2: "44%" }, { w1: "70%", w2: "30%" }, { w1: "54%", w2: "40%" }],
+      analyses, analysesEmpty: !s.loading && analyses.length === 0,
+      analysesShown: !s.loading && analyses.length > 0,
+
+      tabs: t.tabs.map((label, i) => ({ label, style: this.tabStyle(s.tab === i), go: () => this.setState({ tab: i }) })),
+      actions, actionsEmpty: actions.length === 0,
+
+      projects: (s.emptyMode ? [] : t.projects).map(p => ({ ...p, pct: p.pct + "%", barStyle: this.bar(p.pct) })),
+      protocols,
+      proto: { name: t.protocols[1].name, status: t.protoStatus, version: t.protoVersion, source: t.protoSource, sections: t.protoSections },
+
+      failMode: s.failMode, failState: s.failMode ? t.on : t.off, failRow: this.rowBtn(s.failMode),
+      toggleFail: () => this.setState({ failMode: !s.failMode }),
+      emptyState: s.emptyMode ? t.on : t.off, emptyRow: this.rowBtn(s.emptyMode),
+      toggleEmpty: () => this.setState({ emptyMode: !s.emptyMode }),
+      toastSoon: () => this.say(t.toastSoon),
+      reportIssue: () => this.say(t.toastReported),
+      toast: s.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
