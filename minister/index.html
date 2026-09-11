@@ -1,9 +1,9 @@
 <!doctype html>
 <html>
   <head>
+    <script type="module" src="/src/auth-guard.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module" src="/src/auth-guard.js"></script>
     <script src="/src/support.js"></script>
     <script type="module" src="/src/api/minister.api.js"></script>
   </head>
@@ -12,9 +12,9 @@
       <helmet>
         <link
           rel="stylesheet"
-          href="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/styles.css"
+          href="/src/_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/styles.css"
         />
-        <script src="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/_ds_bundle.js"></script>
+        <script src="/src/_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/_ds_bundle.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -630,7 +630,7 @@
                         </svg>
                         <div style="{{ dayGrid }}">
                           <sc-for
-                            list="{{ t.dayParts }}"
+                            list="{{ dashboardStats }}"
                             as="p"
                             hint-placeholder-count="3"
                           >
@@ -670,6 +670,59 @@
                       >
                         {{ t.needsYou }}
                       </h2>
+                      <sc-if
+                        value="{{ dashboardLoading }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            padding: 18px 0;
+                            color: var(--soft);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ t.dashboardLoading }}
+                        </div>
+                      </sc-if>
+                      <sc-if
+                        value="{{ dashboardError }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            padding: 18px 0;
+                            color: var(--clay);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ t.dashboardError }}
+                        </div>
+                      </sc-if>
+                      <sc-if
+                        value="{{ dashboardEmpty }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div style="padding: 18px 0 26px">
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              margin-bottom: 5px;
+                            "
+                          >
+                            {{ t.dashboardEmpty }}
+                          </div>
+                          <div
+                            style="
+                              font-size: 14px;
+                              line-height: 1.7;
+                              color: var(--soft);
+                            "
+                          >
+                            {{ t.dashboardEmptySub }}
+                          </div>
+                        </div>
+                      </sc-if>
                       <ol
                         style="
                           list-style: none;
@@ -976,6 +1029,34 @@
                         {{ t.newSub }}
                       </div>
 
+                      <label style="display: block; margin-bottom: 18px">
+                        <span
+                          style="
+                            display: block;
+                            font-size: 15.5px;
+                            font-weight: 700;
+                            margin-bottom: 8px;
+                          "
+                          >{{ t.situationTitle }}</span
+                        >
+                        <input
+                          type="text"
+                          value="{{ situationTitle }}"
+                          onChange="{{ onSituationTitle }}"
+                          placeholder="{{ t.situationTitlePh }}"
+                          style="
+                            width: 100%;
+                            padding: 12px 14px;
+                            border: 1px solid var(--hair);
+                            border-radius: 9px;
+                            background: var(--paper);
+                            font-size: 15px;
+                            line-height: 1.5;
+                            color: var(--ink);
+                          "
+                        />
+                      </label>
+
                       <label style="display: block; margin-bottom: 8px">
                         <span
                           style="
@@ -1152,11 +1233,29 @@
                           font-size: 14.5px;
                           line-height: 1.75;
                           color: var(--soft);
-                          margin-bottom: 26px;
+                          margin-bottom: 12px;
                         "
                       >
                         {{ t.errorBody }}
                       </div>
+                      <sc-if
+                        value="{{ submitError }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            background: var(--tint);
+                            color: var(--ink);
+                            border-radius: 8px;
+                            padding: 11px 13px;
+                            margin-bottom: 22px;
+                            font-size: 13px;
+                            line-height: 1.6;
+                          "
+                        >
+                          {{ submitError }}
+                        </div>
+                      </sc-if>
                       <div style="display: flex; gap: 10px">
                         <button
                           type="button"
@@ -2939,6 +3038,11 @@
           startNew: "+ Start New Analysis", analyseWith: "Analyse with CARVO",
           nav: { brief: "Today’s Brief", new: "New Analysis", analyses: "My Analyses", actions: "My Actions", projects: "Projects", protocols: "Protocols", notifications: "Notifications", profile: "Profile", settings: "Settings" },
           navGroups: { main: "MAIN", work: "WORK", knowledge: "KNOWLEDGE", account: "ACCOUNT" },
+          dashboardStats: ["Open situations", "Active actions", "Active projects"],
+          dashboardLoading: "Loading your CARVO workspace…",
+          dashboardError: "Your workspace could not be loaded.",
+          dashboardEmpty: "No open work yet.",
+          dashboardEmptySub: "Start an analysis or create a project to build your CARVO workspace.",
           date: "Sunday · 23 Elul · Ki Tavo, first Aliyah",
           briefHead: "You have the office. The question today is whether you are working in it — or still running for it.",
           dayParts: [
@@ -2967,6 +3071,8 @@
           verse: "“And it shall be, when you come into the land which the Lord your God gives you as an inheritance, and you possess it and dwell in it” · Deuteronomy 26:1",
           newTitle: "Start New Analysis",
           newSub: "Describe the situation and let CARVO analyse it against the approved knowledge.",
+          situationTitle: "Situation title",
+          situationTitlePh: "Give this situation a short, clear title…",
           whatHappening: "What is happening?",
           situationPh: "Describe the situation, decision or problem you are dealing with…",
           useBriefItem: "Use the committee vote from today’s brief",
@@ -3119,6 +3225,11 @@
           startNew: "+ התחלת ניתוח חדש", analyseWith: "נתח עם קארבו",
           nav: { brief: "התדריך של היום", new: "ניתוח חדש", analyses: "הניתוחים שלי", actions: "הפעולות שלי", projects: "פרויקטים", protocols: "פרוטוקולים", notifications: "התראות", profile: "פרופיל", settings: "הגדרות" },
           navGroups: { main: "ראשי", work: "עבודה", knowledge: "ידע", account: "חשבון" },
+          dashboardStats: ["מצבים פתוחים", "פעולות פעילות", "פרויקטים פעילים"],
+          dashboardLoading: "טוען את סביבת העבודה שלך בקארבו…",
+          dashboardError: "לא ניתן היה לטעון את סביבת העבודה.",
+          dashboardEmpty: "אין עדיין עבודה פתוחה.",
+          dashboardEmptySub: "התחל ניתוח או צור פרויקט כדי לבנות את סביבת העבודה שלך בקארבו.",
           date: "יום ראשון · כ״ג באלול · כי תבוא, עלייה ראשונה",
           briefHead: "קיבלת את התפקיד. השאלה של היום היא אם אתה עובד בו — או עדיין רץ אליו.",
           dayParts: [

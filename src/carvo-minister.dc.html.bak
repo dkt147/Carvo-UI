@@ -3,9 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module" src="/src/auth-guard.js"></script>
-    <script src="/src/support.js"></script>
-    <script type="module" src="/src/api/minister.api.js"></script>
+    <script src="./support.js"></script>
   </head>
   <body>
     <x-dc>
@@ -1248,7 +1246,7 @@
                           max-width: 32ch;
                         "
                       >
-                        {{ resultTitle }}
+                        {{ t.resultTitle }}
                       </h1>
                       <div
                         style="
@@ -1257,7 +1255,7 @@
                           margin-bottom: 38px;
                         "
                       >
-                        {{ resultMeta }}
+                        {{ t.resultMeta }}
                       </div>
 
                       <div
@@ -1279,7 +1277,7 @@
                         "
                       >
                         <div style="font-size: 15px; line-height: 1.75">
-                          {{ told }}
+                          {{ t.told }}
                         </div>
                         <div
                           style="display:grid;grid-template-columns:{{ twoCol }};gap:12px 26px;margin-top:16px;border-top:1px solid var(--hair);padding-top:16px"
@@ -1325,7 +1323,7 @@
                         "
                       >
                         <sc-for
-                          list="{{ identified }}"
+                          list="{{ t.identified }}"
                           as="o"
                           hint-placeholder-count="4"
                         >
@@ -1482,7 +1480,7 @@
                             max-width: 66ch;
                           "
                         >
-                          {{ interp1 }}
+                          {{ t.interp1 }}
                         </div>
                         <div
                           style="
@@ -1492,7 +1490,7 @@
                             margin-top: 14px;
                           "
                         >
-                          {{ interp2 }}
+                          {{ t.interp2 }}
                         </div>
                       </div>
 
@@ -1523,7 +1521,7 @@
                             text-wrap: pretty;
                           "
                         >
-                          {{ recAction }}
+                          {{ t.recAction }}
                         </div>
                         <div
                           style="display:grid;grid-template-columns:{{ twoCol }};gap:18px 30px"
@@ -1540,7 +1538,7 @@
                               {{ t.whyK }}
                             </div>
                             <div style="font-size: 14px; line-height: 1.75">
-                              {{ recWhy }}
+                              {{ t.recWhy }}
                             </div>
                           </div>
                           <div>
@@ -1555,7 +1553,7 @@
                               {{ t.expectedK }}
                             </div>
                             <div style="font-size: 14px; line-height: 1.75">
-                              {{ recExpected }}
+                              {{ t.recExpected }}
                             </div>
                           </div>
                         </div>
@@ -2117,7 +2115,7 @@
                       </h1>
                       <button
                         type="button"
-                        onClick="{{ createProjectFromPrompt }}"
+                        onClick="{{ toastSoon }}"
                         style="
                           background: none;
                           border: 1px solid var(--hair);
@@ -2244,19 +2242,6 @@
                             <span style="font-size: 12.5px; color: var(--grey)"
                               >{{ p.last }}</span
                             >
-                          </div>
-                          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-                            <button type="button" onClick="{{ p.advance }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                              Update status
-                            </button>
-                            <button type="button" onClick="{{ p.addMilestone }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                              + Milestone
-                            </button>
-                            <sc-for list="{{ p.milestoneItems }}" as="m" hint-placeholder-count="3">
-                              <button type="button" onClick="{{ m.toggle }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                                {{ m.done ? "✓ " : "" }}{{ m.title }}
-                              </button>
-                            </sc-for>
                           </div>
                         </div>
                       </sc-for>
@@ -2498,11 +2483,6 @@
                     >
                       {{ t.notifTitle }}
                     </h1>
-                    <div style="display:flex;gap:8px;margin-bottom:14px">
-                      <button type="button" onClick="{{ markAllRead }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer">
-                        Mark all as read
-                      </button>
-                    </div>
                     <div
                       style="
                         display: flex;
@@ -2541,11 +2521,8 @@
                                 margin-top: 4px;
                               "
                             >
-                              {{ n.when }} · {{ n.read ? "Read" : "Unread" }}
+                              {{ n.when }}
                             </div>
-                            <button type="button" onClick="{{ n.go }}" style="margin-top:8px;background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer">
-                              {{ n.read ? "Read" : "Mark as read" }}
-                            </button>
                           </div>
                         </div>
                       </sc-for>
@@ -2577,7 +2554,7 @@
                           margin-bottom: 34px;
                         "
                       >
-                        {{ profileRole }} · {{ t.profileOffice }}
+                        {{ t.role }} · {{ t.profileOffice }}
                       </div>
                       <sc-for
                         list="{{ t.profileBlocks }}"
@@ -3293,15 +3270,8 @@
         state = {
           lang: null, screen: "brief", w: 1280, drawer: false, step: -1,
           toast: null, sourceOpen: false, tab: 0, filter: 0, query: "",
-          situation: "", situationTitle: "", situationId: null, aiJobId: null,
-          resultData: null, selectedProtocol: null,
-          calDone: false, accepted: false, failMode: false, emptyMode: false,
-          submittingAnalysis: false, submitError: null,
-          loading: false, protoOpen: false,
-          dashboardLoading: true, dashboardError: null,
-          ministerData: {
-            situations: [], actions: [], projects: [], notifications: [], unreadNotifications: 0
-          }
+          situation: "", calDone: false, accepted: false, failMode: false, emptyMode: false,
+          loading: false, protoOpen: false
         };
 
         componentDidMount() {
@@ -3309,33 +3279,6 @@
           window.addEventListener("resize", this.onR);
           this.setState({ w: window.innerWidth });
           this.applyAccent();
-          this.loadMinisterDashboard();
-        }
-
-        async loadMinisterDashboard() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterDashboard) {
-            this.setState({
-              dashboardLoading: false,
-              dashboardError: "Minister API is not available."
-            });
-            return;
-          }
-
-          try {
-            const ministerData = await api.getMinisterDashboard();
-            this.setState({
-              ministerData,
-              dashboardLoading: false,
-              dashboardError: null
-            });
-          } catch (error) {
-            console.error("[CARVO] Minister dashboard load failed:", error);
-            this.setState({
-              dashboardLoading: false,
-              dashboardError: error?.message || "Failed to load minister workspace."
-            });
-          }
         }
         componentDidUpdate() { this.applyAccent(); }
         componentWillUnmount() {
@@ -3367,90 +3310,17 @@
           if (typeof window !== "undefined") window.scrollTo({ top: 0 });
         }
 
-        async runAnalysis() {
-          if (this.state.submittingAnalysis) return;
-
-          const api = window.CARVO_MINISTER_API;
-          const title = String(this.state.situationTitle || "").trim();
-          const description = String(this.state.situation || "").trim();
-
-          if (!api?.createMinisterSituation || !api?.requestMinisterAnalysis) {
-            this.setState({
-              submitError: "Minister analysis API is not available.",
-              screen: "error"
-            });
-            return;
-          }
-
-          if (!title) {
-            this.say(this.t.situationTitlePh);
-            return;
-          }
-
-          if (!description) {
-            this.say(this.t.situationPh);
-            return;
-          }
-
+        runAnalysis() {
           clearInterval(this.iv);
-          this.setState({
-            submittingAnalysis: true,
-            submitError: null,
-            screen: "processing",
-            step: 0
-          });
-
-          try {
-            let situationId = this.state.situationId;
-
-            // Create the situation once. If queueing fails, retrying will
-            // reuse this same situation instead of creating duplicates.
-            if (!situationId) {
-              const situation = await api.createMinisterSituation({
-                title,
-                description
-              });
-
-              situationId = situation?.id;
-
-              if (!situationId) {
-                throw new Error("Situation was created without an id.");
-              }
-
-              this.setState({ situationId });
-            }
-
-            this.setState({ step: 1 });
-
-            const job = await api.requestMinisterAnalysis(situationId);
-            const jobId = job?.id;
-
-            if (!jobId) {
-              throw new Error("Analysis was queued without a job id.");
-            }
-
-            this.setState({
-              aiJobId: jobId,
-              step: 2,
-              submittingAnalysis: false
-            });
-
-            this.say("Your situation was saved and analysis was queued.");
-            this.pollAnalysisJob(jobId);
-          } catch (error) {
-            console.error("[CARVO] Minister analysis request failed:", error);
-
-            this.setState({
-              submittingAnalysis: false,
-              submitError: error?.message || "Failed to start analysis.",
-              screen: "error",
-              step: -1
-            });
-
-            if (typeof window !== "undefined") {
-              window.scrollTo({ top: 0 });
-            }
-          }
+          this.setState({ screen: "processing", step: 0 });
+          this.iv = setInterval(() => {
+            const n = this.state.step + 1;
+            if (n >= 5) {
+              clearInterval(this.iv);
+              this.setState({ screen: this.state.failMode ? "error" : "result", step: -1 });
+              if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+            } else this.setState({ step: n });
+          }, 750);
         }
 
         btn(active) {
@@ -3478,279 +3348,6 @@
         }
         rowBtn(on) {
           return "display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:start;background:none;border:1px solid " + (on ? "var(--clay)" : "var(--hair)") + ";border-radius:8px;padding:12px 14px;cursor:pointer;font-family:inherit;color:var(--ink)";
-        }
-
-        async pollAnalysisJob(jobId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterAnalysisJob) return;
-          clearInterval(this.iv);
-          let attempts = 0;
-          const poll = async () => {
-            attempts += 1;
-            try {
-              const job = await api.getMinisterAnalysisJob(jobId);
-              const status = String(job?.status || "").toUpperCase();
-              if (status === "COMPLETED") {
-                clearInterval(this.iv);
-                let result = job?.result || null;
-                if (job?.analysisId && api.getMinisterAnalysis) {
-                  try {
-                    const analysis = await api.getMinisterAnalysis(job.analysisId);
-                    if (analysis) {
-                      result = {
-                        ...(result || {}),
-                        analysisId: analysis.id,
-                        summary: analysis.summary,
-                        reasoning: analysis.reasoning,
-                        protocolVersionId: analysis.protocolVersionId
-                      };
-                    }
-                  } catch (error) {
-                    console.warn("[CARVO] Analysis record lookup failed:", error);
-                  }
-                }
-                if (result?.recommendations?.length && api.getMinisterRecommendations && result.analysisId) {
-                  try {
-                    result.recommendations = await api.getMinisterRecommendations(result.analysisId);
-                  } catch (_) {}
-                }
-                this.setState({
-                  aiJobId: jobId,
-                  resultData: result,
-                  submittingAnalysis: false,
-                  step: 5,
-                  screen: "result",
-                  submitError: null
-                });
-                await this.loadMinisterDashboard();
-                return;
-              }
-              if (status === "FAILED") {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: job?.errorMessage || job?.error || "Analysis failed.",
-                  screen: "error",
-                  step: -1
-                });
-                return;
-              }
-              this.setState({ step: status === "PROCESSING" ? 3 : 2 });
-              if (attempts >= 120) {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: "Analysis is taking longer than expected. You can reopen this page and check again.",
-                  screen: "error",
-                  step: -1
-                });
-              }
-            } catch (error) {
-              if (attempts >= 5) {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: error?.message || "Unable to check analysis status.",
-                  screen: "error",
-                  step: -1
-                });
-              }
-            }
-          };
-          await poll();
-          if (this.state.screen === "processing") {
-            this.iv = setInterval(poll, 2000);
-          }
-        }
-
-        async openAnalysis(analysisId, situationId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterAnalysis) return;
-          this.setState({ screen: "processing", step: 4, submitError: null });
-          try {
-            const analysis = await api.getMinisterAnalysis(analysisId);
-            let recommendations = [];
-            if (api.getMinisterRecommendations) {
-              recommendations = await api.getMinisterRecommendations(analysisId);
-            }
-            this.setState({
-              situationId: situationId || analysis?.situationId || null,
-              resultData: { ...(analysis || {}), recommendations },
-              screen: "result",
-              step: 5
-            });
-          } catch (error) {
-            this.setState({
-              submitError: error?.message || "Unable to load this analysis.",
-              screen: "error",
-              step: -1
-            });
-          }
-        }
-
-        async acceptRecommendation() {
-          const api = window.CARVO_MINISTER_API;
-          const result = this.state.resultData || {};
-          const recommendation = result.recommendations?.[0];
-          if (!api?.createMinisterAction) return;
-          try {
-            const title = recommendation?.title || result.summary || this.state.situationTitle || "Follow-up action";
-            const description = recommendation?.description || result.reasoning || "";
-            await api.createMinisterAction({
-              title,
-              description,
-              situationId: this.state.situationId || undefined,
-              recommendationId: recommendation?.id || undefined
-            });
-            this.setState({ accepted: true });
-            await this.loadMinisterDashboard();
-            this.say(this.t.toastAccepted);
-            this.go("actions");
-          } catch (error) {
-            this.say(error?.message || "Could not create the action.");
-          }
-        }
-
-        async updateAction(action) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.updateMinisterActionStatus) return;
-          const current = String(action?.status || "PENDING").toUpperCase();
-          const next = current === "PENDING" ? "IN_PROGRESS" : current === "IN_PROGRESS" ? "COMPLETED" : current;
-          if (next === current) return;
-          try {
-            await api.updateMinisterActionStatus(action.id, next);
-            await this.loadMinisterDashboard();
-            this.say("Action status updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update action.");
-          }
-        }
-
-        async createProjectFromPrompt() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.createMinisterProject) return;
-          const name = window.prompt("Project name");
-          if (!name?.trim()) return;
-          const description = window.prompt("Project description (optional)") || "";
-          const pointA = window.prompt("Point A — current state (optional)") || "";
-          const pointB = window.prompt("Point B — desired public outcome (optional)") || "";
-          try {
-            await api.createMinisterProject({ name: name.trim(), description, pointA, pointB });
-            await this.loadMinisterDashboard();
-            this.say("Project created.");
-          } catch (error) {
-            this.say(error?.message || "Could not create project.");
-          }
-        }
-
-        async updateProject(project) {
-          const api = window.CARVO_MINISTER_API;
-          const current = String(project?.status || "PLANNED").toUpperCase();
-          const next = current === "PLANNED" ? "ACTIVE" : current === "ACTIVE" ? "ON_HOLD" : current === "ON_HOLD" ? "COMPLETED" : current;
-          if (next === current || !api?.updateMinisterProjectStatus) return;
-          try {
-            await api.updateMinisterProjectStatus(project.id, next);
-            await this.loadMinisterDashboard();
-            this.say("Project status updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update project.");
-          }
-        }
-
-        async addMilestone(projectId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.createMinisterMilestone) return;
-          const title = window.prompt("Milestone title");
-          if (!title?.trim()) return;
-          const dueDate = window.prompt("Due date (optional, ISO date/time)") || "";
-          try {
-            await api.createMinisterMilestone({ title: title.trim(), dueDate, projectId });
-            await this.loadMinisterDashboard();
-            this.say("Milestone created.");
-          } catch (error) {
-            this.say(error?.message || "Could not create milestone.");
-          }
-        }
-
-        async toggleMilestone(milestone) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.updateMinisterMilestoneCompletion) return;
-          try {
-            await api.updateMinisterMilestoneCompletion(milestone.id, !milestone.completedAt);
-            await this.loadMinisterDashboard();
-            this.say("Milestone updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update milestone.");
-          }
-        }
-
-        async openProtocol(protocolId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterProtocol) return;
-          try {
-            const protocol = await api.getMinisterProtocol(protocolId);
-            this.setState({ selectedProtocol: protocol, screen: "protocol", drawer: false, query: "" });
-            window.scrollTo({ top: 0 });
-          } catch (error) {
-            this.say(error?.message || "Could not load protocol.");
-          }
-        }
-
-        async markNotification(notificationId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.markMinisterNotificationAsRead) return;
-          try {
-            await api.markMinisterNotificationAsRead(notificationId);
-            await this.loadMinisterDashboard();
-          } catch (error) {
-            this.say(error?.message || "Could not mark notification as read.");
-          }
-        }
-
-        async markAllNotificationsRead() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.markAllMinisterNotificationsAsRead) return;
-          try {
-            await api.markAllMinisterNotificationsAsRead();
-            await this.loadMinisterDashboard();
-            this.say("All notifications marked as read.");
-          } catch (error) {
-            this.say(error?.message || "Could not update notifications.");
-          }
-        }
-
-        async recordOutcome() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.createMinisterEvent || !api?.createMinisterResult) return;
-          const title = window.prompt("Outcome title");
-          if (!title?.trim()) return;
-          const description = window.prompt("What happened?") || "";
-          try {
-            const event = await api.createMinisterEvent({
-              type: "OTHER",
-              title: title.trim(),
-              description,
-              situationId: this.state.situationId || undefined
-            });
-            const result = await api.createMinisterResult({
-              title: title.trim(),
-              description,
-              eventId: event.id
-            });
-            this.setState({ lastResultId: result?.id || null });
-            const feedback = window.prompt("Feedback/correction (optional)");
-            if (feedback?.trim() && result?.id && api.createMinisterFeedback) {
-              await api.createMinisterFeedback({
-                type: "OBSERVATION",
-                content: feedback.trim(),
-                resultId: result.id
-              });
-            }
-            await this.loadMinisterDashboard();
-            this.say("Outcome recorded.");
-          } catch (error) {
-            this.say(error?.message || "Could not record outcome.");
-          }
         }
 
         renderVals() {
@@ -3788,95 +3385,10 @@
             }))
           }));
 
-          const ministerData = s.ministerData || {
-            situations: [], actions: [], projects: [], notifications: [], unreadNotifications: 0
-          };
-
-          const situationById = new Map(
-            ministerData.situations.map((item) => [item.id, item])
-          );
-
-          const activeActions = ministerData.actions.filter((item) =>
-            ["PENDING", "IN_PROGRESS"].includes(String(item.status).toUpperCase())
-          );
-
-          const activeProjects = ministerData.projects.filter((item) =>
-            ["PLANNED", "ACTIVE", "ON_HOLD"].includes(String(item.status).toUpperCase())
-          );
-
-          const completedActions = ministerData.actions.filter((item) =>
-            String(item.status).toUpperCase() === "COMPLETED"
-          );
-
-          const openSituations = ministerData.situations.filter((item) =>
-            ["OPEN", "ANALYZING"].includes(String(item.status).toUpperCase())
-          );
-
-          const dynamicNeeds = [
-            ...openSituations.map((item) => ({
-              type: "situation",
-              id: item.id,
-              title: item.title,
-              body: item.description,
-              src: "Your situation",
-              body2: "",
-              cta: "Open analysis",
-              analyse: () => {
-                this.setState({ situation: item.description || "" });
-                this.go("new");
-              }
-            })),
-            ...activeActions.map((item) => ({
-              type: "action",
-              id: item.id,
-              title: item.title,
-              body: item.description || "This action is still open.",
-              src: "Your actions",
-              body2: "",
-              cta: "View action",
-              analyse: () => this.go("actions")
-            })),
-            ...activeProjects.map((item) => ({
-              type: "project",
-              id: item.id,
-              title: item.name,
-              body: item.pointA || item.description || "Active project",
-              src: "Your projects",
-              body2: item.pointB ? ` → ${item.pointB}` : "",
-              cta: "View project",
-              analyse: () => this.go("projects")
-            }))
-          ].slice(0, 4);
-
-          const needs = dynamicNeeds.map((n, i) => ({
+          const needs = t.needs.map((n, i) => ({
             num: String(i + 1), title: n.title, body: n.body, src: n.src, body2: n.body2, cta: n.cta,
-            analyse: n.analyse
+            analyse: () => { this.setState({ situation: t.briefSituation }); this.go("new"); }
           }));
-
-          const settledItems = [
-            ...completedActions.map((item) => ({
-              n: "",
-              title: item.title,
-              body: item.description || "Action completed.",
-            })),
-            ...ministerData.situations
-              .filter((item) => ["RESOLVED", "ARCHIVED"].includes(String(item.status).toUpperCase()))
-              .map((item) => ({
-                n: "",
-                title: item.title,
-                body: item.description || "Situation resolved.",
-              }))
-          ].slice(0, 4);
-
-          const dashboardStats = [
-            { t: t.dashboardStats[0], s: String(openSituations.length) },
-            { t: t.dashboardStats[1], s: String(activeActions.length) },
-            { t: t.dashboardStats[2], s: String(activeProjects.length) }
-          ];
-
-          const dashboardHasData =
-            needs.length > 0 || settledItems.length > 0 ||
-            ministerData.notifications.length > 0;
 
           const terrain = he
             ? "M840,124 C806,120 782,108 752,92 C726,78 706,60 676,50 C650,42 630,46 604,54 C574,63 552,78 522,84 C494,90 470,80 442,70 C412,59 384,52 354,56 C322,60 296,80 266,94 C236,108 206,116 176,116 C140,116 112,108 82,112 C54,116 26,124 0,126"
@@ -3886,113 +3398,25 @@
             : [[88, 92, 8], [164, 50, 13], [318, 84, 9], [486, 56, 11], [664, 116, 7]]
           ).map(d => ({ x: d[0], y: d[1], r: d[2] }));
 
-          const allA = s.emptyMode ? [] : ministerData.situations.flatMap((situation) =>
-            (situation.analyses || []).map((analysis) => {
-              const linkedActions = ministerData.actions.filter(
-                (action) => action.situationId === situation.id
-              );
-              const hasOpenAction = linkedActions.some((action) =>
-                ["PENDING", "IN_PROGRESS"].includes(String(action.status).toUpperCase())
-              );
-              const isCompleted = ["RESOLVED", "ARCHIVED"].includes(
-                String(situation.status).toUpperCase()
-              );
-
-              return {
-                id: analysis.id,
-                situationId: situation.id,
-                title: situation.title,
-                date: new Date(analysis.createdAt).toLocaleString(),
-                project: "—",
-                status: isCompleted
-                  ? "Completed"
-                  : hasOpenAction
-                    ? "Action open"
-                    : "No action",
-                rec: analysis.summary || "Analysis recorded",
-                go: () => this.openAnalysis(analysis.id, situation.id)
-              };
-            })
-          );
-
+          const allA = s.emptyMode ? [] : t.analyses;
           const fKey = [null, t.filters[1], t.filters[2], t.filters[3]][s.filter];
           const q = s.query.trim().toLowerCase();
           const analyses = allA
             .filter(a => !fKey || a.status === fKey)
-            .filter(a => !q || (a.title + " " + a.rec + " " + a.project).toLowerCase().includes(q));
+            .filter(a => !q || (a.title + " " + a.rec + " " + a.project).toLowerCase().includes(q))
+            .map(a => ({ ...a, go: () => this.go("result") }));
 
-          const actLists = [
-            ministerData.actions.filter((a) =>
-              ["PENDING", "IN_PROGRESS"].includes(String(a.status).toUpperCase())
-            ),
-            ministerData.actions.filter((a) =>
-              String(a.status).toUpperCase() === "COMPLETED"
-            ),
-            ministerData.actions.filter((a) => {
-              const status = String(a.status).toUpperCase();
-              if (["COMPLETED", "CANCELLED"].includes(status) || !a.dueDate) return false;
-              return new Date(a.dueDate).getTime() < Date.now();
-            })
-          ];
-
-          const actions = (s.emptyMode ? [] : actLists[s.tab]).map((a) => {
-            const status = String(a.status).toUpperCase();
-            const pct = status === "COMPLETED" ? 100 : status === "IN_PROGRESS" ? 50 : 0;
-            const due = a.dueDate
-              ? new Date(a.dueDate).toLocaleString()
-              : "No due date";
-
-            return {
-              title: a.title,
-              why: a.description || "No additional description.",
-              project: "—",
-              due,
-              pct: pct + "%",
-              barStyle: this.bar(pct),
-              color: status === "COMPLETED" ? "var(--soft)" : "var(--clay)",
-              status: status === "PENDING" ? "Pending" : status === "IN_PROGRESS" ? "In progress" : "Completed",
-              next: status === "COMPLETED" ? "View result" : "Update status",
-              id: a.id, advance: () => this.updateAction(a)
-            };
-          });
-
-          const projects = (s.emptyMode ? [] : ministerData.projects).map(p => {
-            const milestones = Array.isArray(p.milestones) ? p.milestones : [];
-            const completed = milestones.filter(m => m.completedAt).length;
-            const pct = milestones.length ? Math.round((completed / milestones.length) * 100) : 0;
-            return {
-              id: p.id,
-              name: p.name,
-              status: String(p.status || "").replace(/_/g, " "),
-              a: p.pointA || p.description || "Not specified",
-              b: p.pointB || "Not specified",
-              pct: pct + "%",
-              barStyle: this.bar(pct),
-              milestones: `${completed}/${milestones.length} milestones`,
-              last: p.updatedAt ? new Date(p.updatedAt).toLocaleString() : "",
-              advance: () => this.updateProject(p),
-              addMilestone: () => this.addMilestone(p.id),
-              milestoneItems: milestones.map(m => ({
-                id: m.id, title: m.title, done: Boolean(m.completedAt),
-                toggle: () => this.toggleMilestone(m)
-              }))
-            };
-          });
+          const actLists = [t.actions.active, t.actions.completed, t.actions.overdue];
+          const actions = (s.emptyMode ? [] : actLists[s.tab]).map(a => ({
+            ...a, pct: a.pct + "%", barStyle: this.bar(a.pct),
+            color: a.pct === 100 ? "var(--soft)" : "var(--clay)",
+            advance: () => this.say(t.toastAdvanced)
+          }));
 
           const protoQ = scr === "protocols" ? q : "";
-          const backendProtocols = Array.isArray(ministerData.protocols) ? ministerData.protocols : [];
-          const protocols = backendProtocols
-            .filter(p => !protoQ || (p.name + " " + (p.description || "")).toLowerCase().includes(protoQ))
-            .map(p => {
-              const latest = Array.isArray(p.versions) && p.versions.length ? p.versions[0] : null;
-              return {
-                id: p.id,
-                name: p.name,
-                summary: p.description || "No description supplied.",
-                meta: `${String(p.status || "").replace(/_/g, " ")}${latest ? ` · v${latest.version}` : ""}`,
-                go: () => this.openProtocol(p.id)
-              };
-            });
+          const protocols = t.protocols
+            .filter(p => !protoQ || (p.name + " " + p.summary).toLowerCase().includes(protoQ))
+            .map((p, i) => ({ ...p, go: () => this.go("protocol") }));
 
           const steps = t.steps.map((label, i) => {
             const done = i < s.step, active = i === s.step;
@@ -4003,70 +3427,15 @@
             };
           });
 
-          const notifications = (s.emptyMode ? [] : ministerData.notifications).map((n) => ({
-            title: n.title,
-            when: new Date(n.createdAt).toLocaleString(),
-            unread: !n.readAt,
-            dot: "width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px;background:" + (!n.readAt ? "var(--clay)" : "var(--hair)"),
-            read: Boolean(n.readAt),
-            go: () => this.markNotification(n.id)
+          const notifications = t.notifications.map(n => ({
+            ...n,
+            dot: "width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px;background:" + (n.unread ? "var(--clay)" : "var(--hair)")
           }));
 
           const pagePad = narrow ? "padding:26px 20px 60px" : "padding:38px 44px 70px";
 
-          const selectedProtocol = s.selectedProtocol;
-          const latestProtocolVersion = selectedProtocol?.versions?.[0] || null;
-          const protoContent = latestProtocolVersion?.content || "";
-          const proto = selectedProtocol ? {
-            name: selectedProtocol.name,
-            status: String(selectedProtocol.status || "").replace(/_/g, " "),
-            version: latestProtocolVersion ? `Version ${latestProtocolVersion.version}` : "No versions",
-            source: latestProtocolVersion ? new Date(latestProtocolVersion.createdAt).toLocaleString() : "Backend protocol",
-            sections: protoContent
-              ? [{ k: "Protocol content", v: protoContent }]
-              : [{ k: "Description", v: selectedProtocol.description || "No description supplied." }]
-          } : {
-            name: t.protocols[1]?.name || "Protocol",
-            status: t.protoStatus, version: t.protoVersion, source: t.protoSource, sections: t.protoSections
-          };
-
-          const resultData = s.resultData || {};
-          const resultRecommendation = resultData.recommendations?.[0] || {};
-          const resultSituation = ministerData.situations.find(item => item.id === s.situationId);
-          const resultProtocol = selectedProtocol || null;
-          const resultTitle = resultSituation?.title || resultData.summary || t.resultTitle;
-          const resultMeta = resultData.requestId
-            ? `Request ${resultData.requestId}${resultData.externalJobId ? ` · Job ${resultData.externalJobId}` : ""}`
-            : t.resultMeta;
-          const told = resultSituation?.description || t.told;
-          const identified = resultData.reasoning
-            ? [{ t: "Analysis reasoning", s: resultData.reasoning }]
-            : t.identified;
-          const interp1 = resultData.reasoning || t.interp1;
-          const interp2 = resultData.summary || t.interp2;
-          const recAction = resultRecommendation.title || resultData.summary || t.recAction;
-          const recWhy = resultRecommendation.description || t.recWhy;
-          const recExpected = resultData.metadata?.expectedResult || t.recExpected;
-
           return {
-            dir: he ? "rtl" : "ltr",
-            t: {
-              ...t,
-              notifications,
-              settledItems,
-              profileBlocks: [
-                { k: "ACCOUNT", v: `${storedUser?.email || "—"} · ${storedUser?.role || "MINISTER"}` },
-                { k: "USER ID", v: storedUser?.id || "—" },
-                { k: "OPEN SITUATIONS", v: String(openSituations.length) },
-                { k: "ACTIVE PROJECTS", v: String(activeProjects.length) }
-              ]
-            },
-            userName,
-            profileRole: storedUser?.role || "MINISTER",
-            resultTitle, resultMeta, told, identified, interp1, interp2, recAction, recWhy, recExpected,
-            resultHasData: Boolean(s.resultData),
-            recordOutcome: () => this.recordOutcome(),
-            markAllRead: () => this.markAllNotificationsRead(),
+            dir: he ? "rtl" : "ltr", t: { ...t, notifications }, userName,
             narrow, wide: !narrow,
             sLogin: scr === "login", sApp: scr !== "login",
             sBrief: scr === "brief", sNew: scr === "new", sResult: scr === "result",
@@ -4077,15 +3446,9 @@
 
             heBtn: this.btn(he), enBtn: this.btn(!he),
             setHe: () => this.setState({ lang: "he" }), setEn: () => this.setState({ lang: "en" }),
-            signIn: () => this.go("brief"), signOut: () => { if (window.CARVO_API?.logout) window.CARVO_API.logout(); else this.go("login"); },
+            signIn: () => this.go("brief"), signOut: () => this.go("login"),
             toggleDrawer: () => this.setState({ drawer: !s.drawer }),
-            goNew: () => {
-              this.setState({
-                situation: s.situation || t.briefSituation,
-                situationTitle: s.situationTitle || t.newTitle
-              });
-              this.go("new");
-            },
+            goNew: () => { this.setState({ situation: s.situation || t.briefSituation }); this.go("new"); },
             goProfile: () => this.go("profile"), goProtocols: () => this.go("protocols"),
 
             asideStyle: narrow
@@ -4101,10 +3464,7 @@
             dayCell: narrow ? "padding-top:16px;border-top:1px solid var(--hair)" : "padding:0 20px;border-inline-start:1px solid var(--hair)",
             twoCol: narrow ? "1fr" : "1fr 1fr",
 
-            nav, needs, terrain, dots, dashboardStats, dashboardHasData,
-            dashboardLoading: s.dashboardLoading,
-            dashboardError: s.dashboardError,
-            dashboardEmpty: !s.dashboardLoading && !s.dashboardError && !dashboardHasData,
+            nav, needs, terrain, dots,
             sun: he ? "M778,119 a17,17 0 0 1 34,0" : "M28,119 a17,17 0 0 1 34,0",
             hor: he ? [768, 822] : [18, 72],
 
@@ -4115,17 +3475,8 @@
             markCalDone: () => { this.setState({ calDone: true }); this.say(t.toastCal); },
 
             situation: s.situation,
-            situationTitle: s.situationTitle,
-            situationId: s.situationId,
-            aiJobId: s.aiJobId,
-            submittingAnalysis: s.submittingAnalysis,
-            submitError: s.submitError,
             onSituation: e => this.setState({ situation: e.target.value }),
-            onSituationTitle: e => this.setState({ situationTitle: e.target.value }),
-            fillFromBrief: () => this.setState({
-              situation: t.briefSituation,
-              situationTitle: t.briefSituation.split(/[.!?]/)[0].trim().slice(0, 120)
-            }),
+            fillFromBrief: () => this.setState({ situation: t.briefSituation }),
             analyse: () => this.runAnalysis(),
             steps, progStyle: "height:2px;background:var(--clay);border-radius:2px;transition:width .6s ease;width:" + Math.max(6, ((s.step + 1) / 5) * 100) + "%",
 
@@ -4133,7 +3484,7 @@
               ? "background:var(--wash);color:var(--soft);border:1px solid var(--hair)"
               : "background:var(--clay);color:var(--paper)"),
             acceptLabel: s.accepted ? t.accepted : t.accept,
-            acceptAction: () => this.acceptRecommendation(),
+            acceptAction: () => { this.setState({ accepted: true }); this.say(t.toastAccepted); this.go("actions"); },
             disagree: () => this.say(t.toastFeedback),
             openSource: () => this.setState({ sourceOpen: true }),
             closeSource: () => this.setState({ sourceOpen: false }),
@@ -4158,13 +3509,11 @@
             emptyState: s.emptyMode ? t.on : t.off, emptyRow: this.rowBtn(s.emptyMode),
             toggleEmpty: () => this.setState({ emptyMode: !s.emptyMode }),
             toastSoon: () => this.say(t.toastSoon),
-            createProjectFromPrompt: () => this.createProjectFromPrompt(),
             reportIssue: () => this.say(t.toastReported),
             toast: s.toast
           };
         }
       }
     </script>
-    <script type="module" src="/src/role-ui.js"></script>
   </body>
 </html>
