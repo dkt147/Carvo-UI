@@ -92,11 +92,18 @@ export const createMinisterSituation = async ({ title, description }) =>
     }),
   );
 
-export const requestMinisterAnalysis = async (situationId) =>
+export const requestMinisterAnalysis = async (
+  situationId,
+  { projectId = null, protocolVersionId = null } = {},
+) =>
   unwrapData(
     await apiRequest("/ai/analyses", {
       method: "POST",
-      body: JSON.stringify({ situationId }),
+      body: JSON.stringify({
+        situationId,
+        ...(projectId ? { projectId } : {}),
+        ...(protocolVersionId ? { protocolVersionId } : {}),
+      }),
     }),
   );
 

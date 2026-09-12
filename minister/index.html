@@ -1101,6 +1101,36 @@
                         {{ t.useBriefItem }}
                       </button>
 
+                      <div style="display:grid;grid-template-columns:{{ twoCol }};gap:20px 26px;margin:0 0 28px">
+                        <label style="display:block">
+                          <span style="display:block;font-size:13px;color:var(--soft);margin-bottom:6px">Project context <span style="color:var(--grey)">(optional)</span></span>
+                          <select
+                            value="{{ selectedProjectId }}"
+                            onChange="{{ onProjectContext }}"
+                            style="width:100%;padding:10px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:14px;color:var(--ink)"
+                          >
+                            <sc-for list="{{ projectOptions }}" as="p" hint-placeholder-count="4">
+                              <option value="{{ p.value }}">{{ p.label }}</option>
+                            </sc-for>
+                          </select>
+                          <span style="display:block;font-size:11.5px;color:var(--grey);margin-top:6px">Adds the selected project's Point A, Point B and status to the analysis context.</span>
+                        </label>
+
+                        <label style="display:block">
+                          <span style="display:block;font-size:13px;color:var(--soft);margin-bottom:6px">Protocol version <span style="color:var(--grey)">(optional)</span></span>
+                          <select
+                            value="{{ selectedProtocolVersionId }}"
+                            onChange="{{ onProtocolVersion }}"
+                            style="width:100%;padding:10px 13px;border:1px solid var(--hair);border-radius:8px;background:var(--paper);font-size:14px;color:var(--ink)"
+                          >
+                            <sc-for list="{{ protocolVersionOptions }}" as="p" hint-placeholder-count="4">
+                              <option value="{{ p.value }}">{{ p.label }}</option>
+                            </sc-for>
+                          </select>
+                          <span style="display:block;font-size:11.5px;color:var(--grey);margin-top:6px">Only the selected protocol version is sent as authoritative protocol context.</span>
+                        </label>
+                      </div>
+
                       <div
                         style="
                           font-size: 11.5px;
@@ -3459,13 +3489,14 @@
           createProjectOpen: false, createProjectSubmitting: false, createProjectError: null,
           createProjectName: "", createProjectDescription: "", createProjectPointA: "", createProjectPointB: "",
           situation: "", situationTitle: "", situationId: null, aiJobId: null,
+          selectedProjectId: null, selectedProtocolVersionId: null,
           resultData: null, selectedProtocol: null,
           calDone: false, accepted: false, failMode: false, emptyMode: false,
           submittingAnalysis: false, submitError: null,
           loading: false, protoOpen: false,
           dashboardLoading: true, dashboardError: null,
           ministerData: {
-            situations: [], actions: [], projects: [], notifications: [], unreadNotifications: 0
+            situations: [], actions: [], projects: [], protocols: [], notifications: [], unreadNotifications: 0
           }
         };
 
@@ -3587,7 +3618,10 @@
 
             this.setState({ step: 1 });
 
-            const job = await api.requestMinisterAnalysis(situationId);
+            const job = await api.requestMinisterAnalysis(situationId, {
+              projectId: this.state.selectedProjectId || null,
+              protocolVersionId: this.state.selectedProtocolVersionId || null,
+            });
             const jobId = job?.id;
 
             if (!jobId) {
@@ -3989,7 +4023,7 @@
           }));
 
           const ministerData = s.ministerData || {
-            situations: [], actions: [], projects: [], notifications: [], unreadNotifications: 0
+            situations: [], actions: [], projects: [], protocols: [], notifications: [], unreadNotifications: 0
           };
 
           const situationById = new Map(
@@ -4248,6 +4282,24 @@
           const recWhy = resultRecommendation.description || t.recWhy;
           const recExpected = resultData.metadata?.expectedResult || t.recExpected;
 
+          const projectOptions = [
+            { value: "", label: "No project context" },
+            ...ministerData.projects.map((project) => ({
+              value: project.id,
+              label: `${project.name} · ${String(project.status || "").replace(/_/g, " ")}`,
+            })),
+          ];
+
+          const protocolVersionOptions = [
+            { value: "", label: "No protocol selected" },
+            ...ministerData.protocols.flatMap((protocol) =>
+              (protocol.versions || []).map((version) => ({
+                value: version.id,
+                label: `${protocol.name} · Version ${version.version}`,
+              })),
+            ),
+          ];
+
           return {
             dir: he ? "rtl" : "ltr",
             t: {
@@ -4282,7 +4334,9 @@
             goNew: () => {
               this.setState({
                 situation: s.situation || t.briefSituation,
-                situationTitle: s.situationTitle || t.newTitle
+                situationTitle: s.situationTitle || t.newTitle,
+                selectedProjectId: null,
+                selectedProtocolVersionId: null
               });
               this.go("new");
             },
@@ -4302,6 +4356,7 @@
             twoCol: narrow ? "1fr" : "1fr 1fr",
 
             nav, needs, terrain, dots, dashboardStats, dashboardHasData,
+            projectOptions, protocolVersionOptions,
             dashboardLoading: s.dashboardLoading,
             dashboardError: s.dashboardError,
             dashboardEmpty: !s.dashboardLoading && !s.dashboardError && !dashboardHasData,
@@ -4318,10 +4373,14 @@
             situationTitle: s.situationTitle,
             situationId: s.situationId,
             aiJobId: s.aiJobId,
+            selectedProjectId: s.selectedProjectId,
+            selectedProtocolVersionId: s.selectedProtocolVersionId,
             submittingAnalysis: s.submittingAnalysis,
             submitError: s.submitError,
             onSituation: e => this.setState({ situation: e.target.value }),
             onSituationTitle: e => this.setState({ situationTitle: e.target.value }),
+            onProjectContext: e => this.setState({ selectedProjectId: e.target.value || null }),
+            onProtocolVersion: e => this.setState({ selectedProtocolVersionId: e.target.value || null }),
             fillFromBrief: () => this.setState({
               situation: t.briefSituation,
               situationTitle: t.briefSituation.split(/[.!?]/)[0].trim().slice(0, 120)

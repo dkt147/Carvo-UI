@@ -104,6 +104,33 @@
       .field input:focus {
         border-color: var(--clay);
       }
+      .passwordWrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .passwordWrapper input {
+        flex: 1;
+        padding-right: 40px;
+      }
+      .togglePassword {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--soft);
+        font-size: 18px;
+      }
+      .togglePassword:hover {
+        color: var(--ink);
+      }
       button {
         width: 100%;
         border: 1px solid var(--clay);
@@ -163,7 +190,6 @@
         <div class="brand">CARVO</div>
         <div class="tag">Knowledge · Analysis · Action</div>
         <div class="rule"></div>
-        <div class="eyebrow">PHASE 1 WEB APPLICATION</div>
         <h1>Sign in</h1>
         <div class="sub">
           Enter your CARVO credentials. Your account role determines which
@@ -182,14 +208,17 @@
             />
           </div>
           <div class="field">
-            <label for="password">PASSWORD</label
-            ><input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-            />
+            <label for="password">PASSWORD</label>
+            <div class="passwordWrapper">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="togglePassword" id="togglePasswordBtn" onclick="togglePasswordVisibility(event)">👁</button>
+            </div>
           </div>
           <button id="submitButton" type="submit">Sign in →</button>
         </form>
@@ -208,6 +237,15 @@
       const password = document.getElementById("password");
       const button = document.getElementById("submitButton");
       const errorBox = document.getElementById("errorBox");
+      const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+
+      window.togglePasswordVisibility = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const isPassword = password.type === "password";
+        password.type = isPassword ? "text" : "password";
+        togglePasswordBtn.textContent = isPassword ? "🙈" : "👁";
+      };
 
       const showError = (message) => {
         errorBox.textContent = message;
@@ -227,6 +265,7 @@
           return showError("Email and password are required.");
 
         button.disabled = true;
+        togglePasswordBtn.disabled = true;
         button.textContent = "Signing in…";
         try {
           const user = await login(emailValue, passwordValue);
@@ -238,6 +277,7 @@
         } catch (error) {
           showError(error.message || "Unable to sign in. Please try again.");
           button.disabled = false;
+          togglePasswordBtn.disabled = false;
           button.textContent = "Sign in →";
         }
       });
