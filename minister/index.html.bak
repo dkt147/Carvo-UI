@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
   <head>
+    <script type="module" src="/src/auth-guard.js"></script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script type="module" src="/src/auth-guard.js"></script>
-    <script src="/src/support.js"></script>   
+    <script src="/src/support.js"></script>
     <script type="module" src="/src/api/minister.api.js"></script>
   </head>
   <body>
@@ -12,9 +12,9 @@
       <helmet>
         <link
           rel="stylesheet"
-          href="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/styles.css"
+          href="/src/_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/styles.css"
         />
-        <script src="_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/_ds_bundle.js"></script>
+        <script src="/src/_ds/broadsheet-40f84b71-5edc-425d-b6b9-0bc602d5ebbe/_ds_bundle.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -630,7 +630,7 @@
                         </svg>
                         <div style="{{ dayGrid }}">
                           <sc-for
-                            list="{{ t.dayParts }}"
+                            list="{{ dashboardStats }}"
                             as="p"
                             hint-placeholder-count="3"
                           >
@@ -670,6 +670,59 @@
                       >
                         {{ t.needsYou }}
                       </h2>
+                      <sc-if
+                        value="{{ dashboardLoading }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            padding: 18px 0;
+                            color: var(--soft);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ t.dashboardLoading }}
+                        </div>
+                      </sc-if>
+                      <sc-if
+                        value="{{ dashboardError }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            padding: 18px 0;
+                            color: var(--clay);
+                            font-size: 14px;
+                          "
+                        >
+                          {{ t.dashboardError }}
+                        </div>
+                      </sc-if>
+                      <sc-if
+                        value="{{ dashboardEmpty }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div style="padding: 18px 0 26px">
+                          <div
+                            style="
+                              font-size: 16px;
+                              font-weight: 600;
+                              margin-bottom: 5px;
+                            "
+                          >
+                            {{ t.dashboardEmpty }}
+                          </div>
+                          <div
+                            style="
+                              font-size: 14px;
+                              line-height: 1.7;
+                              color: var(--soft);
+                            "
+                          >
+                            {{ t.dashboardEmptySub }}
+                          </div>
+                        </div>
+                      </sc-if>
                       <ol
                         style="
                           list-style: none;
@@ -976,6 +1029,34 @@
                         {{ t.newSub }}
                       </div>
 
+                      <label style="display: block; margin-bottom: 18px">
+                        <span
+                          style="
+                            display: block;
+                            font-size: 15.5px;
+                            font-weight: 700;
+                            margin-bottom: 8px;
+                          "
+                          >{{ t.situationTitle }}</span
+                        >
+                        <input
+                          type="text"
+                          value="{{ situationTitle }}"
+                          onChange="{{ onSituationTitle }}"
+                          placeholder="{{ t.situationTitlePh }}"
+                          style="
+                            width: 100%;
+                            padding: 12px 14px;
+                            border: 1px solid var(--hair);
+                            border-radius: 9px;
+                            background: var(--paper);
+                            font-size: 15px;
+                            line-height: 1.5;
+                            color: var(--ink);
+                          "
+                        />
+                      </label>
+
                       <label style="display: block; margin-bottom: 8px">
                         <span
                           style="
@@ -1152,11 +1233,29 @@
                           font-size: 14.5px;
                           line-height: 1.75;
                           color: var(--soft);
-                          margin-bottom: 26px;
+                          margin-bottom: 12px;
                         "
                       >
                         {{ t.errorBody }}
                       </div>
+                      <sc-if
+                        value="{{ submitError }}"
+                        hint-placeholder-val="{{ false }}"
+                      >
+                        <div
+                          style="
+                            background: var(--tint);
+                            color: var(--ink);
+                            border-radius: 8px;
+                            padding: 11px 13px;
+                            margin-bottom: 22px;
+                            font-size: 13px;
+                            line-height: 1.6;
+                          "
+                        >
+                          {{ submitError }}
+                        </div>
+                      </sc-if>
                       <div style="display: flex; gap: 10px">
                         <button
                           type="button"
@@ -1248,7 +1347,7 @@
                           max-width: 32ch;
                         "
                       >
-                        {{ resultTitle }}
+                        {{ t.resultTitle }}
                       </h1>
                       <div
                         style="
@@ -1257,7 +1356,7 @@
                           margin-bottom: 38px;
                         "
                       >
-                        {{ resultMeta }}
+                        {{ t.resultMeta }}
                       </div>
 
                       <div
@@ -1279,7 +1378,7 @@
                         "
                       >
                         <div style="font-size: 15px; line-height: 1.75">
-                          {{ told }}
+                          {{ t.told }}
                         </div>
                         <div
                           style="display:grid;grid-template-columns:{{ twoCol }};gap:12px 26px;margin-top:16px;border-top:1px solid var(--hair);padding-top:16px"
@@ -1325,7 +1424,7 @@
                         "
                       >
                         <sc-for
-                          list="{{ identified }}"
+                          list="{{ t.identified }}"
                           as="o"
                           hint-placeholder-count="4"
                         >
@@ -1482,7 +1581,7 @@
                             max-width: 66ch;
                           "
                         >
-                          {{ interp1 }}
+                          {{ t.interp1 }}
                         </div>
                         <div
                           style="
@@ -1492,7 +1591,7 @@
                             margin-top: 14px;
                           "
                         >
-                          {{ interp2 }}
+                          {{ t.interp2 }}
                         </div>
                       </div>
 
@@ -1523,7 +1622,7 @@
                             text-wrap: pretty;
                           "
                         >
-                          {{ recAction }}
+                          {{ t.recAction }}
                         </div>
                         <div
                           style="display:grid;grid-template-columns:{{ twoCol }};gap:18px 30px"
@@ -1540,7 +1639,7 @@
                               {{ t.whyK }}
                             </div>
                             <div style="font-size: 14px; line-height: 1.75">
-                              {{ recWhy }}
+                              {{ t.recWhy }}
                             </div>
                           </div>
                           <div>
@@ -1555,7 +1654,7 @@
                               {{ t.expectedK }}
                             </div>
                             <div style="font-size: 14px; line-height: 1.75">
-                              {{ recExpected }}
+                              {{ t.recExpected }}
                             </div>
                           </div>
                         </div>
@@ -2117,7 +2216,7 @@
                       </h1>
                       <button
                         type="button"
-                        onClick="{{ createProjectFromPrompt }}"
+                        onClick="{{ toastSoon }}"
                         style="
                           background: none;
                           border: 1px solid var(--hair);
@@ -2244,19 +2343,6 @@
                             <span style="font-size: 12.5px; color: var(--grey)"
                               >{{ p.last }}</span
                             >
-                          </div>
-                          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-                            <button type="button" onClick="{{ p.advance }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                              Update status
-                            </button>
-                            <button type="button" onClick="{{ p.addMilestone }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                              + Milestone
-                            </button>
-                            <sc-for list="{{ p.milestoneItems }}" as="m" hint-placeholder-count="3">
-                              <button type="button" onClick="{{ m.toggle }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:6px 11px;font-size:12px;cursor:pointer">
-                                {{ m.done ? "✓ " : "" }}{{ m.title }}
-                              </button>
-                            </sc-for>
                           </div>
                         </div>
                       </sc-for>
@@ -2498,11 +2584,6 @@
                     >
                       {{ t.notifTitle }}
                     </h1>
-                    <div style="display:flex;gap:8px;margin-bottom:14px">
-                      <button type="button" onClick="{{ markAllRead }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:7px 12px;font-size:12.5px;cursor:pointer">
-                        Mark all as read
-                      </button>
-                    </div>
                     <div
                       style="
                         display: flex;
@@ -2541,11 +2622,8 @@
                                 margin-top: 4px;
                               "
                             >
-                              {{ n.when }} · {{ n.read ? "Read" : "Unread" }}
+                              {{ n.when }}
                             </div>
-                            <button type="button" onClick="{{ n.go }}" style="margin-top:8px;background:none;border:1px solid var(--hair);color:var(--soft);border-radius:7px;padding:5px 10px;font-size:12px;cursor:pointer">
-                              {{ n.read ? "Read" : "Mark as read" }}
-                            </button>
                           </div>
                         </div>
                       </sc-for>
@@ -2577,7 +2655,7 @@
                           margin-bottom: 34px;
                         "
                       >
-                        {{ profileRole }} · {{ t.profileOffice }}
+                        {{ t.role }} · {{ t.profileOffice }}
                       </div>
                       <sc-for
                         list="{{ t.profileBlocks }}"
@@ -2835,58 +2913,6 @@
               </div>
             </sc-if>
 
-
-            <sc-if value="{{ createProjectOpen }}" hint-placeholder-val="{{ false }}">
-              <div
-                style="position:fixed;inset:0;z-index:80;background:rgba(46,44,39,.32);display:flex;align-items:center;justify-content:center;padding:20px;"
-              >
-                <div
-                  style="width:min(620px,100%);max-height:calc(100vh - 40px);overflow:auto;background:var(--paper);border:1px solid var(--hair);border-radius:12px;box-shadow:0 18px 70px rgba(46,44,39,.18);padding:26px;"
-                >
-                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px;">
-                    <div>
-                      <div style="font-size:11px;letter-spacing:.09em;color:var(--clay);font-weight:700;margin-bottom:6px;">NEW PROJECT</div>
-                      <h2 style="font-size:24px;line-height:1.3;font-weight:600;margin:0;">{{ t.createProject }}</h2>
-                      <div style="font-size:13.5px;line-height:1.65;color:var(--soft);margin-top:6px;">Define the work, the current state, and the public outcome you are moving toward.</div>
-                    </div>
-                    <button type="button" onClick="{{ closeCreateProject }}" style="background:none;border:none;font-size:18px;color:var(--soft);cursor:pointer;padding:2px 4px;">✕</button>
-                  </div>
-
-                  <div style="display:flex;flex-direction:column;gap:17px;">
-                    <label style="display:flex;flex-direction:column;gap:7px;">
-                      <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Project name <span style="color:var(--clay);">*</span></span>
-                      <input type="text" value="{{ createProjectName }}" onChange="{{ onCreateProjectName }}" placeholder="e.g. Constituent response desk" style="width:100%;box-sizing:border-box;border:1px solid var(--hair);background:var(--paper);color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit;font-size:14px;outline:none;" />
-                    </label>
-
-                    <label style="display:flex;flex-direction:column;gap:7px;">
-                      <span style="font-size:12.5px;font-weight:600;color:var(--ink);">Description</span>
-                      <textarea value="{{ createProjectDescription }}" onChange="{{ onCreateProjectDescription }}" placeholder="What is this project responsible for?" rows="3" style="width:100%;box-sizing:border-box;resize:vertical;border:1px solid var(--hair);background:var(--paper);color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit;font-size:14px;line-height:1.55;outline:none;"></textarea>
-                    </label>
-
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
-                      <label style="display:flex;flex-direction:column;gap:7px;">
-                        <span style="font-size:12.5px;font-weight:600;color:var(--ink);">{{ t.pointA }}</span>
-                        <textarea value="{{ createProjectPointA }}" onChange="{{ onCreateProjectPointA }}" placeholder="Current state" rows="4" style="width:100%;box-sizing:border-box;resize:vertical;border:1px solid var(--hair);background:var(--paper);color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit;font-size:13.5px;line-height:1.55;outline:none;"></textarea>
-                      </label>
-                      <label style="display:flex;flex-direction:column;gap:7px;">
-                        <span style="font-size:12.5px;font-weight:600;color:var(--ink);">{{ t.pointB }}</span>
-                        <textarea value="{{ createProjectPointB }}" onChange="{{ onCreateProjectPointB }}" placeholder="Desired public outcome" rows="4" style="width:100%;box-sizing:border-box;resize:vertical;border:1px solid var(--hair);background:var(--paper);color:var(--ink);border-radius:8px;padding:11px 12px;font:inherit;font-size:13.5px;line-height:1.55;outline:none;"></textarea>
-                      </label>
-                    </div>
-
-                    <sc-if value="{{ createProjectError }}" hint-placeholder-val="{{ false }}">
-                      <div style="background:var(--tint);border:1px solid var(--hair);border-radius:8px;padding:10px 12px;color:var(--clay);font-size:13px;line-height:1.55;">{{ createProjectError }}</div>
-                    </sc-if>
-
-                    <div style="display:flex;justify-content:flex-end;gap:9px;margin-top:3px;padding-top:18px;border-top:1px solid var(--hair);">
-                      <button type="button" onClick="{{ closeCreateProject }}" style="background:none;border:1px solid var(--hair);color:var(--soft);border-radius:8px;padding:10px 16px;font-size:13px;cursor:pointer;">Cancel</button>
-                      <button type="button" onClick="{{ submitCreateProject }}" style="border:none;background:var(--clay);color:var(--paper);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;">{{ createProjectSubmitting ? "Creating…" : "Create Project" }}</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </sc-if>
-
             <sc-if value="{{ sProcessing }}" hint-placeholder-val="{{ false }}">
               <div
                 style="
@@ -2991,6 +3017,11 @@
           startNew: "+ Start New Analysis", analyseWith: "Analyse with CARVO",
           nav: { brief: "Today’s Brief", new: "New Analysis", analyses: "My Analyses", actions: "My Actions", projects: "Projects", protocols: "Protocols", notifications: "Notifications", profile: "Profile", settings: "Settings" },
           navGroups: { main: "MAIN", work: "WORK", knowledge: "KNOWLEDGE", account: "ACCOUNT" },
+          dashboardStats: ["Open situations", "Active actions", "Active projects"],
+          dashboardLoading: "Loading your CARVO workspace…",
+          dashboardError: "Your workspace could not be loaded.",
+          dashboardEmpty: "No open work yet.",
+          dashboardEmptySub: "Start an analysis or create a project to build your CARVO workspace.",
           date: "Sunday · 23 Elul · Ki Tavo, first Aliyah",
           briefHead: "You have the office. The question today is whether you are working in it — or still running for it.",
           dayParts: [
@@ -3019,6 +3050,8 @@
           verse: "“And it shall be, when you come into the land which the Lord your God gives you as an inheritance, and you possess it and dwell in it” · Deuteronomy 26:1",
           newTitle: "Start New Analysis",
           newSub: "Describe the situation and let CARVO analyse it against the approved knowledge.",
+          situationTitle: "Situation title",
+          situationTitlePh: "Give this situation a short, clear title…",
           whatHappening: "What is happening?",
           situationPh: "Describe the situation, decision or problem you are dealing with…",
           useBriefItem: "Use the committee vote from today’s brief",
@@ -3171,6 +3204,11 @@
           startNew: "+ התחלת ניתוח חדש", analyseWith: "נתח עם קארבו",
           nav: { brief: "התדריך של היום", new: "ניתוח חדש", analyses: "הניתוחים שלי", actions: "הפעולות שלי", projects: "פרויקטים", protocols: "פרוטוקולים", notifications: "התראות", profile: "פרופיל", settings: "הגדרות" },
           navGroups: { main: "ראשי", work: "עבודה", knowledge: "ידע", account: "חשבון" },
+          dashboardStats: ["מצבים פתוחים", "פעולות פעילות", "פרויקטים פעילים"],
+          dashboardLoading: "טוען את סביבת העבודה שלך בקארבו…",
+          dashboardError: "לא ניתן היה לטעון את סביבת העבודה.",
+          dashboardEmpty: "אין עדיין עבודה פתוחה.",
+          dashboardEmptySub: "התחל ניתוח או צור פרויקט כדי לבנות את סביבת העבודה שלך בקארבו.",
           date: "יום ראשון · כ״ג באלול · כי תבוא, עלייה ראשונה",
           briefHead: "קיבלת את התפקיד. השאלה של היום היא אם אתה עובד בו — או עדיין רץ אליו.",
           dayParts: [
@@ -3345,10 +3383,7 @@
         state = {
           lang: null, screen: "brief", w: 1280, drawer: false, step: -1,
           toast: null, sourceOpen: false, tab: 0, filter: 0, query: "",
-          createProjectOpen: false, createProjectSubmitting: false, createProjectError: null,
-          createProjectName: "", createProjectDescription: "", createProjectPointA: "", createProjectPointB: "",
           situation: "", situationTitle: "", situationId: null, aiJobId: null,
-          resultData: null, selectedProtocol: null,
           calDone: false, accepted: false, failMode: false, emptyMode: false,
           submittingAnalysis: false, submitError: null,
           loading: false, protoOpen: false,
@@ -3489,8 +3524,13 @@
               submittingAnalysis: false
             });
 
+            // Module 4 owns real job polling and result rendering.
+            // For Module 3 we stop at the queued/processing boundary.
             this.say("Your situation was saved and analysis was queued.");
-            this.pollAnalysisJob(jobId);
+
+            if (typeof window !== "undefined") {
+              window.scrollTo({ top: 0 });
+            }
           } catch (error) {
             console.error("[CARVO] Minister analysis request failed:", error);
 
@@ -3532,314 +3572,6 @@
         }
         rowBtn(on) {
           return "display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;text-align:start;background:none;border:1px solid " + (on ? "var(--clay)" : "var(--hair)") + ";border-radius:8px;padding:12px 14px;cursor:pointer;font-family:inherit;color:var(--ink)";
-        }
-
-        async pollAnalysisJob(jobId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterAnalysisJob) return;
-          clearInterval(this.iv);
-          let attempts = 0;
-          const poll = async () => {
-            attempts += 1;
-            try {
-              const job = await api.getMinisterAnalysisJob(jobId);
-              const status = String(job?.status || "").toUpperCase();
-              if (status === "COMPLETED") {
-                clearInterval(this.iv);
-                let result = job?.result || null;
-                if (job?.analysisId && api.getMinisterAnalysis) {
-                  try {
-                    const analysis = await api.getMinisterAnalysis(job.analysisId);
-                    if (analysis) {
-                      result = {
-                        ...(result || {}),
-                        analysisId: analysis.id,
-                        summary: analysis.summary,
-                        reasoning: analysis.reasoning,
-                        protocolVersionId: analysis.protocolVersionId
-                      };
-                    }
-                  } catch (error) {
-                    console.warn("[CARVO] Analysis record lookup failed:", error);
-                  }
-                }
-                if (result?.recommendations?.length && api.getMinisterRecommendations && result.analysisId) {
-                  try {
-                    result.recommendations = await api.getMinisterRecommendations(result.analysisId);
-                  } catch (_) {}
-                }
-                this.setState({
-                  aiJobId: jobId,
-                  resultData: result,
-                  submittingAnalysis: false,
-                  step: 5,
-                  screen: "result",
-                  submitError: null
-                });
-                await this.loadMinisterDashboard();
-                return;
-              }
-              if (status === "FAILED") {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: job?.errorMessage || job?.error || "Analysis failed.",
-                  screen: "error",
-                  step: -1
-                });
-                return;
-              }
-              this.setState({ step: status === "PROCESSING" ? 3 : 2 });
-              if (attempts >= 120) {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: "Analysis is taking longer than expected. You can reopen this page and check again.",
-                  screen: "error",
-                  step: -1
-                });
-              }
-            } catch (error) {
-              if (attempts >= 5) {
-                clearInterval(this.iv);
-                this.setState({
-                  submittingAnalysis: false,
-                  submitError: error?.message || "Unable to check analysis status.",
-                  screen: "error",
-                  step: -1
-                });
-              }
-            }
-          };
-          await poll();
-          if (this.state.screen === "processing") {
-            this.iv = setInterval(poll, 2000);
-          }
-        }
-
-        async openAnalysis(analysisId, situationId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterAnalysis) return;
-          this.setState({ screen: "processing", step: 4, submitError: null });
-          try {
-            const analysis = await api.getMinisterAnalysis(analysisId);
-            let recommendations = [];
-            if (api.getMinisterRecommendations) {
-              recommendations = await api.getMinisterRecommendations(analysisId);
-            }
-            this.setState({
-              situationId: situationId || analysis?.situationId || null,
-              resultData: { ...(analysis || {}), recommendations },
-              screen: "result",
-              step: 5
-            });
-          } catch (error) {
-            this.setState({
-              submitError: error?.message || "Unable to load this analysis.",
-              screen: "error",
-              step: -1
-            });
-          }
-        }
-
-        async acceptRecommendation() {
-          const api = window.CARVO_MINISTER_API;
-          const result = this.state.resultData || {};
-          const recommendation = result.recommendations?.[0];
-          if (!api?.createMinisterAction) return;
-          try {
-            const title = recommendation?.title || result.summary || this.state.situationTitle || "Follow-up action";
-            const description = recommendation?.description || result.reasoning || "";
-            await api.createMinisterAction({
-              title,
-              description,
-              situationId: this.state.situationId || undefined,
-              recommendationId: recommendation?.id || undefined
-            });
-            this.setState({ accepted: true });
-            await this.loadMinisterDashboard();
-            this.say(this.t.toastAccepted);
-            this.go("actions");
-          } catch (error) {
-            this.say(error?.message || "Could not create the action.");
-          }
-        }
-
-        async updateAction(action) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.updateMinisterActionStatus) return;
-          const current = String(action?.status || "PENDING").toUpperCase();
-          const next = current === "PENDING" ? "IN_PROGRESS" : current === "IN_PROGRESS" ? "COMPLETED" : current;
-          if (next === current) return;
-          try {
-            await api.updateMinisterActionStatus(action.id, next);
-            await this.loadMinisterDashboard();
-            this.say("Action status updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update action.");
-          }
-        }
-
-        openCreateProject() {
-          this.setState({
-            createProjectOpen: true,
-            createProjectSubmitting: false,
-            createProjectError: null,
-            createProjectName: "",
-            createProjectDescription: "",
-            createProjectPointA: "",
-            createProjectPointB: "",
-          });
-        }
-
-        closeCreateProject() {
-          if (this.state.createProjectSubmitting) return;
-          this.setState({ createProjectOpen: false, createProjectError: null });
-        }
-
-        async submitCreateProject() {
-          const api = window.CARVO_MINISTER_API;
-          const name = String(this.state.createProjectName || "").trim();
-          if (!name) {
-            this.setState({ createProjectError: "Project name is required." });
-            return;
-          }
-          if (!api?.createMinisterProject) {
-            this.setState({ createProjectError: "Minister project API is not available." });
-            return;
-          }
-
-          this.setState({ createProjectSubmitting: true, createProjectError: null });
-          try {
-            await api.createMinisterProject({
-              name,
-              description: String(this.state.createProjectDescription || "").trim(),
-              pointA: String(this.state.createProjectPointA || "").trim(),
-              pointB: String(this.state.createProjectPointB || "").trim(),
-            });
-            await this.loadMinisterDashboard();
-            this.setState({ createProjectOpen: false, createProjectSubmitting: false });
-            this.say("Project created.");
-          } catch (error) {
-            this.setState({
-              createProjectSubmitting: false,
-              createProjectError: error?.message || "Could not create project.",
-            });
-          }
-        }
-
-        async createProjectFromPrompt() {
-          this.openCreateProject();
-        }
-
-        async updateProject(project) {
-          const api = window.CARVO_MINISTER_API;
-          const current = String(project?.status || "PLANNED").toUpperCase();
-          const next = current === "PLANNED" ? "ACTIVE" : current === "ACTIVE" ? "ON_HOLD" : current === "ON_HOLD" ? "COMPLETED" : current;
-          if (next === current || !api?.updateMinisterProjectStatus) return;
-          try {
-            await api.updateMinisterProjectStatus(project.id, next);
-            await this.loadMinisterDashboard();
-            this.say("Project status updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update project.");
-          }
-        }
-
-        async addMilestone(projectId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.createMinisterMilestone) return;
-          const title = window.prompt("Milestone title");
-          if (!title?.trim()) return;
-          const dueDate = window.prompt("Due date (optional, ISO date/time)") || "";
-          try {
-            await api.createMinisterMilestone({ title: title.trim(), dueDate, projectId });
-            await this.loadMinisterDashboard();
-            this.say("Milestone created.");
-          } catch (error) {
-            this.say(error?.message || "Could not create milestone.");
-          }
-        }
-
-        async toggleMilestone(milestone) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.updateMinisterMilestoneCompletion) return;
-          try {
-            await api.updateMinisterMilestoneCompletion(milestone.id, !milestone.completedAt);
-            await this.loadMinisterDashboard();
-            this.say("Milestone updated.");
-          } catch (error) {
-            this.say(error?.message || "Could not update milestone.");
-          }
-        }
-
-        async openProtocol(protocolId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.getMinisterProtocol) return;
-          try {
-            const protocol = await api.getMinisterProtocol(protocolId);
-            this.setState({ selectedProtocol: protocol, screen: "protocol", drawer: false, query: "" });
-            window.scrollTo({ top: 0 });
-          } catch (error) {
-            this.say(error?.message || "Could not load protocol.");
-          }
-        }
-
-        async markNotification(notificationId) {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.markMinisterNotificationAsRead) return;
-          try {
-            await api.markMinisterNotificationAsRead(notificationId);
-            await this.loadMinisterDashboard();
-          } catch (error) {
-            this.say(error?.message || "Could not mark notification as read.");
-          }
-        }
-
-        async markAllNotificationsRead() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.markAllMinisterNotificationsAsRead) return;
-          try {
-            await api.markAllMinisterNotificationsAsRead();
-            await this.loadMinisterDashboard();
-            this.say("All notifications marked as read.");
-          } catch (error) {
-            this.say(error?.message || "Could not update notifications.");
-          }
-        }
-
-        async recordOutcome() {
-          const api = window.CARVO_MINISTER_API;
-          if (!api?.createMinisterEvent || !api?.createMinisterResult) return;
-          const title = window.prompt("Outcome title");
-          if (!title?.trim()) return;
-          const description = window.prompt("What happened?") || "";
-          try {
-            const event = await api.createMinisterEvent({
-              type: "OTHER",
-              title: title.trim(),
-              description,
-              situationId: this.state.situationId || undefined
-            });
-            const result = await api.createMinisterResult({
-              title: title.trim(),
-              description,
-              eventId: event.id
-            });
-            this.setState({ lastResultId: result?.id || null });
-            const feedback = window.prompt("Feedback/correction (optional)");
-            if (feedback?.trim() && result?.id && api.createMinisterFeedback) {
-              await api.createMinisterFeedback({
-                type: "OBSERVATION",
-                content: feedback.trim(),
-                resultId: result.id
-              });
-            }
-            await this.loadMinisterDashboard();
-            this.say("Outcome recorded.");
-          } catch (error) {
-            this.say(error?.message || "Could not record outcome.");
-          }
         }
 
         renderVals() {
@@ -3999,7 +3731,7 @@
                     ? "Action open"
                     : "No action",
                 rec: analysis.summary || "Analysis recorded",
-                go: () => this.openAnalysis(analysis.id, situation.id)
+                go: () => this.go("result")
               };
             })
           );
@@ -4041,47 +3773,14 @@
               color: status === "COMPLETED" ? "var(--soft)" : "var(--clay)",
               status: status === "PENDING" ? "Pending" : status === "IN_PROGRESS" ? "In progress" : "Completed",
               next: status === "COMPLETED" ? "View result" : "Update status",
-              id: a.id, advance: () => this.updateAction(a)
-            };
-          });
-
-          const projects = (s.emptyMode ? [] : ministerData.projects).map(p => {
-            const milestones = Array.isArray(p.milestones) ? p.milestones : [];
-            const completed = milestones.filter(m => m.completedAt).length;
-            const pct = milestones.length ? Math.round((completed / milestones.length) * 100) : 0;
-            return {
-              id: p.id,
-              name: p.name,
-              status: String(p.status || "").replace(/_/g, " "),
-              a: p.pointA || p.description || "Not specified",
-              b: p.pointB || "Not specified",
-              pct: pct + "%",
-              barStyle: this.bar(pct),
-              milestones: `${completed}/${milestones.length} milestones`,
-              last: p.updatedAt ? new Date(p.updatedAt).toLocaleString() : "",
-              advance: () => this.updateProject(p),
-              addMilestone: () => this.addMilestone(p.id),
-              milestoneItems: milestones.map(m => ({
-                id: m.id, title: m.title, done: Boolean(m.completedAt),
-                toggle: () => this.toggleMilestone(m)
-              }))
+              advance: () => this.go("actions")
             };
           });
 
           const protoQ = scr === "protocols" ? q : "";
-          const backendProtocols = Array.isArray(ministerData.protocols) ? ministerData.protocols : [];
-          const protocols = backendProtocols
-            .filter(p => !protoQ || (p.name + " " + (p.description || "")).toLowerCase().includes(protoQ))
-            .map(p => {
-              const latest = Array.isArray(p.versions) && p.versions.length ? p.versions[0] : null;
-              return {
-                id: p.id,
-                name: p.name,
-                summary: p.description || "No description supplied.",
-                meta: `${String(p.status || "").replace(/_/g, " ")}${latest ? ` · v${latest.version}` : ""}`,
-                go: () => this.openProtocol(p.id)
-              };
-            });
+          const protocols = t.protocols
+            .filter(p => !protoQ || (p.name + " " + p.summary).toLowerCase().includes(protoQ))
+            .map((p, i) => ({ ...p, go: () => this.go("protocol") }));
 
           const steps = t.steps.map((label, i) => {
             const done = i < s.step, active = i === s.step;
@@ -4096,66 +3795,13 @@
             title: n.title,
             when: new Date(n.createdAt).toLocaleString(),
             unread: !n.readAt,
-            dot: "width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px;background:" + (!n.readAt ? "var(--clay)" : "var(--hair)"),
-            read: Boolean(n.readAt),
-            go: () => this.markNotification(n.id)
+            dot: "width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px;background:" + (!n.readAt ? "var(--clay)" : "var(--hair)")
           }));
 
           const pagePad = narrow ? "padding:26px 20px 60px" : "padding:38px 44px 70px";
 
-          const selectedProtocol = s.selectedProtocol;
-          const latestProtocolVersion = selectedProtocol?.versions?.[0] || null;
-          const protoContent = latestProtocolVersion?.content || "";
-          const proto = selectedProtocol ? {
-            name: selectedProtocol.name,
-            status: String(selectedProtocol.status || "").replace(/_/g, " "),
-            version: latestProtocolVersion ? `Version ${latestProtocolVersion.version}` : "No versions",
-            source: latestProtocolVersion ? new Date(latestProtocolVersion.createdAt).toLocaleString() : "Backend protocol",
-            sections: protoContent
-              ? [{ k: "Protocol content", v: protoContent }]
-              : [{ k: "Description", v: selectedProtocol.description || "No description supplied." }]
-          } : {
-            name: t.protocols[1]?.name || "Protocol",
-            status: t.protoStatus, version: t.protoVersion, source: t.protoSource, sections: t.protoSections
-          };
-
-          const resultData = s.resultData || {};
-          const resultRecommendation = resultData.recommendations?.[0] || {};
-          const resultSituation = ministerData.situations.find(item => item.id === s.situationId);
-          const resultProtocol = selectedProtocol || null;
-          const resultTitle = resultSituation?.title || resultData.summary || t.resultTitle;
-          const resultMeta = resultData.requestId
-            ? `Request ${resultData.requestId}${resultData.externalJobId ? ` · Job ${resultData.externalJobId}` : ""}`
-            : t.resultMeta;
-          const told = resultSituation?.description || t.told;
-          const identified = resultData.reasoning
-            ? [{ t: "Analysis reasoning", s: resultData.reasoning }]
-            : t.identified;
-          const interp1 = resultData.reasoning || t.interp1;
-          const interp2 = resultData.summary || t.interp2;
-          const recAction = resultRecommendation.title || resultData.summary || t.recAction;
-          const recWhy = resultRecommendation.description || t.recWhy;
-          const recExpected = resultData.metadata?.expectedResult || t.recExpected;
-
           return {
-            dir: he ? "rtl" : "ltr",
-            t: {
-              ...t,
-              notifications,
-              settledItems,
-              profileBlocks: [
-                { k: "ACCOUNT", v: `${storedUser?.email || "—"} · ${storedUser?.role || "MINISTER"}` },
-                { k: "USER ID", v: storedUser?.id || "—" },
-                { k: "OPEN SITUATIONS", v: String(openSituations.length) },
-                { k: "ACTIVE PROJECTS", v: String(activeProjects.length) }
-              ]
-            },
-            userName,
-            profileRole: storedUser?.role || "MINISTER",
-            resultTitle, resultMeta, told, identified, interp1, interp2, recAction, recWhy, recExpected,
-            resultHasData: Boolean(s.resultData),
-            recordOutcome: () => this.recordOutcome(),
-            markAllRead: () => this.markAllNotificationsRead(),
+            dir: he ? "rtl" : "ltr", t: { ...t, notifications, settledItems }, userName,
             narrow, wide: !narrow,
             sLogin: scr === "login", sApp: scr !== "login",
             sBrief: scr === "brief", sNew: scr === "new", sResult: scr === "result",
@@ -4222,7 +3868,7 @@
               ? "background:var(--wash);color:var(--soft);border:1px solid var(--hair)"
               : "background:var(--clay);color:var(--paper)"),
             acceptLabel: s.accepted ? t.accepted : t.accept,
-            acceptAction: () => this.acceptRecommendation(),
+            acceptAction: () => { this.setState({ accepted: true }); this.say(t.toastAccepted); this.go("actions"); },
             disagree: () => this.say(t.toastFeedback),
             openSource: () => this.setState({ sourceOpen: true }),
             closeSource: () => this.setState({ sourceOpen: false }),
@@ -4238,31 +3884,7 @@
             tabs: t.tabs.map((label, i) => ({ label, style: this.tabStyle(s.tab === i), go: () => this.setState({ tab: i }) })),
             actions, actionsEmpty: actions.length === 0,
 
-            projects: (s.emptyMode ? [] : ministerData.projects).map((p) => {
-              const milestones = Array.isArray(p.milestones) ? p.milestones : [];
-              const completed = milestones.filter((m) => Boolean(m.completedAt)).length;
-              const pct = milestones.length ? Math.round((completed / milestones.length) * 100) : 0;
-              const statusMap = { PLANNED: "Planning", ACTIVE: "Active", ON_HOLD: "On hold", COMPLETED: "Completed", CANCELLED: "Cancelled" };
-              const status = statusMap[String(p.status || "PLANNED").toUpperCase()] || String(p.status || "PLANNED");
-              const lastDate = p.updatedAt || p.createdAt;
-              return {
-                ...p,
-                status,
-                a: p.pointA || p.description || "No current state recorded.",
-                b: p.pointB || "No desired outcome recorded.",
-                pct: pct + "%",
-                barStyle: this.bar(pct),
-                milestones: `${completed} of ${milestones.length} milestones`,
-                last: lastDate ? `Last activity ${new Date(lastDate).toLocaleDateString()}` : "No activity recorded",
-                advance: () => this.updateProject(p),
-                addMilestone: () => this.addMilestone(p.id),
-                milestoneItems: milestones.map((m) => ({
-                  title: m.title,
-                  done: Boolean(m.completedAt),
-                  toggle: () => this.toggleMilestone(m),
-                })),
-              };
-            }),
+            projects: (s.emptyMode ? [] : t.projects).map(p => ({ ...p, pct: p.pct + "%", barStyle: this.bar(p.pct) })),
             protocols,
             proto: { name: t.protocols[1].name, status: t.protoStatus, version: t.protoVersion, source: t.protoSource, sections: t.protoSections },
 
@@ -4271,20 +3893,6 @@
             emptyState: s.emptyMode ? t.on : t.off, emptyRow: this.rowBtn(s.emptyMode),
             toggleEmpty: () => this.setState({ emptyMode: !s.emptyMode }),
             toastSoon: () => this.say(t.toastSoon),
-            createProjectFromPrompt: () => this.openCreateProject(),
-            createProjectOpen: s.createProjectOpen,
-            createProjectSubmitting: s.createProjectSubmitting,
-            createProjectError: s.createProjectError,
-            createProjectName: s.createProjectName,
-            createProjectDescription: s.createProjectDescription,
-            createProjectPointA: s.createProjectPointA,
-            createProjectPointB: s.createProjectPointB,
-            onCreateProjectName: e => this.setState({ createProjectName: e.target.value }),
-            onCreateProjectDescription: e => this.setState({ createProjectDescription: e.target.value }),
-            onCreateProjectPointA: e => this.setState({ createProjectPointA: e.target.value }),
-            onCreateProjectPointB: e => this.setState({ createProjectPointB: e.target.value }),
-            closeCreateProject: () => this.closeCreateProject(),
-            submitCreateProject: () => this.submitCreateProject(),
             reportIssue: () => this.say(t.toastReported),
             toast: s.toast
           };
