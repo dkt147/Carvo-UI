@@ -59,8 +59,15 @@ export const apiRequest = async (path, options = {}) => {
   if (!response.ok) {
     if (response.status === 401) {
       clearSession();
+      if (!window.location.pathname.endsWith('/login.html')) {
+        window.location.replace('/login.html');
+      }
     }
-    const message = payload?.message || `Request failed with status ${response.status}`;
+    const message =
+      (typeof payload?.error === "string" ? payload.error : payload?.error?.message) ||
+      payload?.message ||
+      payload?.errorMessage ||
+      `Request failed with status ${response.status}`;
     const error = new Error(message);
     error.status = response.status;
     error.payload = payload;

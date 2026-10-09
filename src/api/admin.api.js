@@ -1,15 +1,45 @@
-import { apiRequest } from "./client.js";
+import { apiRequest, API_URL, getToken } from "./client.js";
 
-const unwrapData = (response) => response?.data ?? null;
-const unwrapList = (response) => (Array.isArray(response?.data) ? response.data : []);
+const unwrapData = (response) => response?.data ?? response ?? null;
+const unwrapList = (response) => {
+  const value = response?.data ?? response;
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.items)) return value.items;
+  if (Array.isArray(value?.results)) return value.results;
+  if (Array.isArray(value?.rows)) return value.rows;
+  return [];
+};
 
 const json = (method, body) => ({ method, body: JSON.stringify(body) });
 
 export const getAdminDashboard = async () => unwrapData(await apiRequest("/admin/dashboard"));
 
-export const getDocuments = async () => unwrapList(await apiRequest("/admin/documents"));
+export const getDocuments = async () => unwrapList(await apiRequest("/admin/documents?page=1&limit=100"));
 export const getDocument = async (id) => unwrapData(await apiRequest(`/admin/documents/${encodeURIComponent(id)}`));
-export const createDocument = async (body) => unwrapData(await apiRequest("/admin/documents", json("POST", body)));
+export const downloadDocumentFile = async (id) => {
+  const response = await fetch(`${API_URL}/admin/documents/${encodeURIComponent(id)}/file`, {
+    headers: { Authorization: `Bearer ${getToken()}`, Accept: "*/*" },
+  });
+  if (!response.ok) {
+    let message = `Download failed (${response.status})`;
+    try { const body = await response.json(); message = body?.message || message; } catch {}
+    throw new Error(message);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = response.headers.get("content-disposition")?.match(/filename="?([^";]+)"?/i)?.[1] || `carvo-document-${id}`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+export const createDocument = async ({ title, description, file }) => {
+  if (!(file instanceof File)) throw new Error("Select a PDF or DOCX file to upload.");
+  const form = new FormData();
+  form.append("title", title);
+  if (description) form.append("description", description);
+  form.append("file", file);
+  return unwrapData(await apiRequest("/admin/documents", { method: "POST", body: form }));
+};
 export const createDocumentVersion = async (id, content) => unwrapData(await apiRequest(`/admin/documents/${encodeURIComponent(id)}/versions`, json("POST", { content })));
 export const updateDocumentStatus = async (id, status) => unwrapData(await apiRequest(`/admin/documents/${encodeURIComponent(id)}/status`, json("PATCH", { status })));
 
@@ -71,7 +101,7 @@ export const markNotificationAsRead = async (id) => unwrapData(await apiRequest(
 export const markAllNotificationsAsRead = async () => unwrapData(await apiRequest("/notifications/read-all", { method: "PATCH" }));
 
 window.CARVO_ADMIN_API = {
-  getAdminDashboard, getDocuments, getDocument, createDocument, createDocumentVersion, updateDocumentStatus,
+  getAdminDashboard, getDocuments, getDocument, downloadDocumentFile, createDocument, createDocumentVersion, updateDocumentStatus,
   getKnowledge, getKnowledgeById, createKnowledge, updateKnowledge, deleteKnowledge,
   getReviews, getReview, createReview, updateReview, answerClarification, requestReviewChanges, approveReview, rejectReview,
   getProtocols, getProtocol, createProtocol, updateProtocol, updateProtocolStatus, createProtocolVersion, getProtocolVersions, linkKnowledge, unlinkKnowledge,

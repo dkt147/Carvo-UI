@@ -776,6 +776,7 @@
         getAdminDashboard,
         getDocuments,
         getDocument,
+        downloadDocumentFile,
         createDocument,
         createDocumentVersion,
         updateDocumentStatus,
@@ -1138,7 +1139,7 @@
       window.openKnowledgeCreate = () => {
         openDrawer();
         document.getElementById("drawer").innerHTML =
-          `<div class="drawerHeader"><div><div class="eyebrow">KNOWLEDGE</div><h2>Create knowledge</h2></div>${button("Close", "closeDrawer()")}</div><form onsubmit="createKnowledgeUi(event)"><div class="field"><label>Type</label><select class="select" id="knowledgeCreateType">${KNOWLEDGE_TYPES.map((x) => `<option>${x}</option>`).join("")}</select></div><div class="field"><label>Title</label><input class="search" id="knowledgeCreateTitle" required></div><div class="field"><label>Content</label><textarea class="textarea" id="knowledgeCreateContent" required></textarea></div><div class="field"><label>Source reference</label><input class="search" id="knowledgeCreateSource"></div><div class="field"><label>Confidence (0–1)</label><input class="search" id="knowledgeCreateConfidence" type="number" min="0" max="1" step="0.01"></div><div class="field"><label>Document ID (optional)</label><input class="search" id="knowledgeCreateDocument"></div><button class="btn primary">Create Knowledge</button></form>`;
+          `<div class="drawerHeader"><div><div class="eyebrow">KNOWLEDGE</div><h2>Create knowledge</h2></div>${button("Close", "closeDrawer()")}</div><form onsubmit="createKnowledgeUi(event)"><div class="field"><label>Type</label><select class="select" id="knowledgeCreateType">${KNOWLEDGE_TYPES.map((x) => `<option>${x}</option>`).join("")}</select></div><div class="field"><label>Title</label><input class="search" id="knowledgeCreateTitle" required></div><div class="field"><label>Content</label><textarea class="textarea" id="knowledgeCreateContent" required></textarea></div><div class="field"><label>Source reference</label><input class="search" id="knowledgeCreateSource"></div><div class="field"><label>Confidence (0–1)</label><input class="search" id="knowledgeCreateConfidence" type="number" min="0" max="1" step="0.01"></div><div class="field"><label>Source document (optional)</label><select class="select" id="knowledgeCreateDocument"><option value="">No linked document</option>${state.documents.map((d) => `<option value="${esc(d.id)}">${esc(d.title || d.fileName || d.id)}</option>`).join("")}</select></div><button class="btn primary">Create Knowledge</button></form>`;
       };
       window.createKnowledgeUi = async (e) => {
         e.preventDefault();
@@ -1221,29 +1222,29 @@
             "Create a document record through the administration API.",
             button("Document Library", "go(\'documents\')"),
           ) +
-          `<div class="detail"><form onsubmit="submitDocument(event)"><div class="field"><label>Document title</label><input class="search" id="documentTitle" required placeholder="Source document"></div><div class="field"><label>Description</label><textarea class="textarea" id="documentDescription" placeholder="Optional description"></textarea></div><div class="field"><label>File name</label><input class="search" id="documentFileName" required placeholder="source.pdf"></div><div class="field"><label>File URL</label><input class="search" id="documentFileUrl" placeholder="https://..."></div><div id="uploadError" class="notice error" style="display:none"></div><button class="btn primary" id="uploadButton">Create Document</button></form></div>`
+          `<div class="detail"><form onsubmit="submitDocument(event)"><div class="field"><label>Document title</label><input class="search" id="documentTitle" required placeholder="Source document"></div><div class="field"><label>Description</label><textarea class="textarea" id="documentDescription" placeholder="Optional description"></textarea></div><div class="field"><label>Source file (PDF or DOCX, up to server limit)</label><input class="search" id="documentFile" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required></div><div id="uploadError" class="notice error" style="display:none"></div><button class="btn primary" id="uploadButton">Upload Document</button></form></div>`
         );
       }
       window.submitDocument = async (e) => {
         e.preventDefault();
         const body = {
           title: document.getElementById("documentTitle").value.trim(),
-          description:
-            document.getElementById("documentDescription").value.trim() ||
-            undefined,
-          fileName: document.getElementById("documentFileName").value.trim(),
-          fileUrl:
-            document.getElementById("documentFileUrl").value.trim() ||
-            undefined,
+          description: document.getElementById("documentDescription").value.trim() || undefined,
+          file: document.getElementById("documentFile").files?.[0] || null,
         };
         const b = document.getElementById("uploadButton"),
           er = document.getElementById("uploadError");
-        if (!body.title || !body.fileName) return;
+        er.style.display = "none";
+        if (!body.title || !body.file) {
+          er.textContent = "Enter a title and choose a PDF or DOCX file.";
+          er.style.display = "block";
+          return;
+        }
         b.disabled = true;
-        b.textContent = "Creating…";
+        b.textContent = "Uploading…";
         try {
           await createDocument(body);
-          toast("Document created successfully.");
+          toast("Document uploaded successfully.");
           await loadAll();
           state.page = "documents";
           render();
@@ -1252,7 +1253,7 @@
           er.style.display = "block";
         } finally {
           b.disabled = false;
-          b.textContent = "Create Document";
+          b.textContent = "Upload Document";
         }
       };
 
@@ -1262,9 +1263,48 @@
         d.innerHTML = '<div class="loading">Loading document…</div>';
         try {
           const x = await getDocument(id);
-          d.innerHTML = `<div class="drawerHeader"><div><div class="eyebrow">DOCUMENT</div><h2>${esc(x?.title || "Document")}</h2></div>${button("Close", "closeDrawer()")}</div><div class="kv"><span>Status</span><span>${esc(x?.status)}</span></div><div class="kv"><span>File</span><span>${esc(x?.fileName)}</span></div><div class="kv"><span>Uploaded by</span><span>${esc(x?.uploadedBy?.name || x?.uploadedBy?.email || "—")}</span></div><div class="kv"><span>Created</span><span>${fmtDateTime(x?.createdAt)}</span></div><div class="kv"><span>Updated</span><span>${fmtDateTime(x?.updatedAt)}</span></div><div class="reviewBlock"><h3>Description</h3><p>${esc(x?.description || "No description supplied.")}</p></div><div class="reviewBlock"><h3>Document status</h3><select class="select" id="docStatusEdit">${DOCUMENT_STATUSES.map((s) => `<option ${x?.status === s ? "selected" : ""}>${s}</option>`).join("")}</select> ${button("Save status", "saveDocumentStatus('" + esc(id) + "')")}</div><div class="reviewBlock"><h3>Add version</h3><textarea class="textarea" id="docVersionContent" placeholder="Version content"></textarea><br>${button("Create version", "saveDocumentVersion('" + esc(id) + "')", true)}</div><div class="reviewBlock"><h3>Versions</h3>${(x?.versions || []).map((v) => `<div class="version"><div class="versionTitle">Version ${esc(v.version)}</div><div class="versionMeta">${fmtDateTime(v.createdAt)}</div><div class="versionContent">${esc(v.content || "No content")}</div></div>`).join("") || '<div class="empty">No versions.</div>'}</div>`;
+          d.innerHTML = `<div class="drawerHeader"><div><div class="eyebrow">DOCUMENT</div><h2>${esc(x?.title || "Document")}</h2></div>${button("Download original", "downloadDocument('" + esc(id) + "')")} ${button("Close", "closeDrawer()")}</div><div class="kv"><span>Status</span><span>${esc(x?.status)}</span></div><div class="kv"><span>File</span><span>${esc(x?.fileName)}</span></div><div class="kv"><span>Uploaded by</span><span>${esc(x?.uploadedBy?.name || x?.uploadedBy?.email || "—")}</span></div><div class="kv"><span>Created</span><span>${fmtDateTime(x?.createdAt)}</span></div><div class="kv"><span>Updated</span><span>${fmtDateTime(x?.updatedAt)}</span></div><div class="reviewBlock"><h3>Description</h3><p>${esc(x?.description || "No description supplied.")}</p></div><div class="reviewBlock"><h3>Start knowledge review</h3><p class="muted">Create a review record for this uploaded document. Add the current understanding and any extracted knowledge below; no AI result is fabricated.</p><textarea class="textarea" id="reviewUnderstanding_${esc(id)}" placeholder="Current understanding of this document"></textarea><textarea class="textarea" id="reviewExtractedKnowledge_${esc(id)}" placeholder='Extracted knowledge JSON array, e.g. [{"type":"PRINCIPLE","title":"...","content":"..."}]'></textarea><textarea class="textarea" id="reviewExtractedProtocols_${esc(id)}" placeholder="Extracted protocols JSON array"></textarea><input class="search" id="reviewSourceReferences_${esc(id)}" placeholder="Source references (comma-separated)"><br>${button("Create review", "createDocumentReview('" + esc(id) + "')", true)}</div><div class="reviewBlock"><h3>Document status</h3><select class="select" id="docStatusEdit">${DOCUMENT_STATUSES.map((s) => `<option ${x?.status === s ? "selected" : ""}>${s}</option>`).join("")}</select> ${button("Save status", "saveDocumentStatus('" + esc(id) + "')")}</div><div class="reviewBlock"><h3>Add version</h3><textarea class="textarea" id="docVersionContent" placeholder="Version content"></textarea><br>${button("Create version", "saveDocumentVersion('" + esc(id) + "')", true)}</div><div class="reviewBlock"><h3>Versions</h3>${(x?.versions || []).map((v) => `<div class="version"><div class="versionTitle">Version ${esc(v.version)}</div><div class="versionMeta">${fmtDateTime(v.createdAt)}</div><div class="versionContent">${esc(v.content || "No content")}</div></div>`).join("") || '<div class="empty">No versions.</div>'}</div>`;
         } catch (e) {
           d.innerHTML = `<div class="notice error">${esc(e?.message || "Unable to load document.")}</div>`;
+        }
+      };
+      window.createDocumentReview = async (id) => {
+        const understanding = document.getElementById("reviewUnderstanding_" + id)?.value.trim();
+        const parseArray = (elementId, label) => {
+          const raw = document.getElementById(elementId)?.value.trim();
+          if (!raw) return [];
+          let value;
+          try { value = JSON.parse(raw); } catch { throw new Error(`${label} must be valid JSON.`); }
+          if (!Array.isArray(value)) throw new Error(`${label} must be a JSON array.`);
+          return value;
+        };
+        try {
+          const extractedKnowledge = parseArray("reviewExtractedKnowledge_" + id, "Extracted knowledge");
+          const extractedProtocols = parseArray("reviewExtractedProtocols_" + id, "Extracted protocols");
+          const sourceReferences = (document.getElementById("reviewSourceReferences_" + id)?.value || "")
+            .split(",").map((x) => x.trim()).filter(Boolean);
+          if (!understanding) return toast("Enter the current understanding before creating a review.");
+          const review = await createReview({
+            documentId: id,
+            aiUnderstanding: understanding,
+            extractedKnowledge,
+            extractedProtocols,
+            sourceReferences,
+          });
+          toast("Knowledge review created.");
+          await loadAll();
+          if (review?.id) await openReview(review.id);
+          else { closeDrawer(); render(); }
+        } catch (e) {
+          toast(e?.message || "Unable to create knowledge review.");
+        }
+      };
+      window.downloadDocument = async (id) => {
+        try {
+          await downloadDocumentFile(id);
+          toast("Document download started.");
+        } catch (e) {
+          toast(e?.message || "Unable to download document.");
         }
       };
       window.saveDocumentStatus = async (id) => {
