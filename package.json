@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vite build && node scripts/verify-vercel-build.mjs",
+    "preview": "vite preview",
+    "verify:build": "node scripts/verify-vercel-build.mjs"
   },
   "devDependencies": {
     "vite": "^7.1.5"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

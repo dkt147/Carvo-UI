@@ -77,41 +77,71 @@ export const deleteMinisterFeedback = async (id) =>
   unwrapData(await apiRequest(`/feedback/${idPath(id)}`, { method: "DELETE" }));
 
 export const getMinisterDashboard = async () => {
-  const [
-    situations,
-    actions,
-    projects,
-    notifications,
-    unreadNotifications,
-    protocols,
-    results,
-    feedback,
-    events,
-    auditLogs,
-  ] = await Promise.all([
+  // These collections drive the primary Minister workspace; fail the dashboard
+  // only if one of the core work collections cannot be loaded.
+  const [rawSituations, actions, projects, protocols] = await Promise.all([
     getMinisterSituations(),
     getMinisterActions(),
     getMinisterProjects(),
-    getMinisterNotifications(),
-    getMinisterUnreadNotificationCount(),
     getMinisterProtocols(),
-    getMinisterResults(),
-    getMinisterFeedback(),
-    getMinisterEvents(),
-    getMinisterAuditLogs(),
   ]);
+
+  const dashboardWarnings = [];
+  const optionalTasks = [
+    ["notifications", getMinisterNotifications, []],
+    ["unread notifications", getMinisterUnreadNotificationCount, 0],
+    ["results", getMinisterResults, []],
+    ["feedback", getMinisterFeedback, []],
+    ["events", getMinisterEvents, []],
+  ];
+  const optionalSettled = await Promise.allSettled(
+    optionalTasks.map(([, load]) => load()),
+  );
+  const optionalData = {};
+  optionalSettled.forEach((result, index) => {
+    const [label, , fallback] = optionalTasks[index];
+    if (result.status === "fulfilled") {
+      const key = label === "unread notifications" ? "unreadNotifications" : label;
+      optionalData[key] = result.value;
+    } else {
+      const key = label === "unread notifications" ? "unreadNotifications" : label;
+      optionalData[key] = fallback;
+      dashboardWarnings.push(`${label} could not be loaded`);
+      console.warn(`[CARVO] Optional Minister dashboard data unavailable (${label}):`, result.reason);
+    }
+  });
+
+  // GET /situations may or may not embed analyses, depending on backend version.
+  // Hydrate from the existing per-situation endpoint when they are not included.
+  const situations = await Promise.all(rawSituations.map(async (situation) => {
+    if (Array.isArray(situation.analyses)) return situation;
+    if (!situation.id) return { ...situation, analyses: [] };
+    try {
+      return {
+        ...situation,
+        analyses: await getMinisterSituationAnalyses(situation.id),
+      };
+    } catch (error) {
+      dashboardWarnings.push(`analyses for ${situation.title || situation.id} could not be loaded`);
+      console.warn("[CARVO] Could not load analyses for situation:", situation.id, error);
+      return { ...situation, analyses: [] };
+    }
+  }));
 
   return {
     situations,
     actions,
     projects,
-    notifications,
-    unreadNotifications,
     protocols,
-    results,
-    feedback,
-    events,
-    auditLogs,
+    notifications: optionalData.notifications || [],
+    unreadNotifications: Number(optionalData.unreadNotifications || 0),
+    results: optionalData.results || [],
+    feedback: optionalData.feedback || [],
+    events: optionalData.events || [],
+    // Audit logs are Admin-scoped in many deployments. Keep the response
+    // property for compatibility, but do not call that endpoint from Minister.
+    auditLogs: [],
+    dashboardWarnings,
   };
 };
 

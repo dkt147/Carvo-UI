@@ -999,7 +999,7 @@
       }
       function errorNotice() {
         return state.error
-          ? `<div class="notice error"><strong>Unable to load live data</strong><div style="margin-top:5px">${esc(state.error)}</div><div style="margin-top:12px"><button class="btn" onclick="refreshCurrentPage()">Try again</button></div></div>`
+          ? `<div class="notice error"><strong>Some live data could not be loaded</strong><div style="margin-top:5px">${esc(state.error)}</div><div style="margin-top:12px"><button class="btn" onclick="refreshCurrentPage()">Try again</button></div></div>`
           : "";
       }
       function button(label, fn, primary = false) {
@@ -1015,9 +1015,23 @@
 
       function render() {
         document.getElementById("app").innerHTML =
-          `<div class="app"><header class="top"><div class="brand">CARVO</div><div class="role">ADMINISTRATION · ${esc(user?.role || "ADMIN")}</div><div class="topRight"><button class="lang">עברית</button><button class="lang">English</button><div class="user">${esc(user?.name || user?.email || "Administrator")} · ${esc(user?.role || "ADMIN")}</div><button class="signout" onclick="signOut()">Sign Out</button></div></header><div class="layout"><aside class="side"><div class="sideIntro"><b>Knowledge · Analysis · Action</b></div><nav class="nav">${groupedNav()}</nav></aside><main class="main">${page()}</main></div></div>`;
+          `<div class="app"><header class="top"><div class="brand">CARVO</div><div class="role">ADMINISTRATION · ${esc(user?.role || "ADMIN")}</div><div class="topRight"><div class="user">${esc(user?.name || user?.email || "Administrator")} · ${esc(user?.role || "ADMIN")}</div><button class="signout" onclick="signOut()">Sign Out</button></div></header><div class="layout"><aside class="side"><div class="sideIntro"><b>Knowledge · Analysis · Action</b></div><nav class="nav">${groupedNav()}</nav></aside><main class="main">${page()}</main></div></div>`;
       }
+      const ADMIN_ONLY_PAGES = new Set(["users", "audit", "settings"]);
+      const KNOWN_PAGES = new Set([
+        "dashboard", "documents", "knowledge", "upload", "reviews",
+        "protocols", "versions", "analyses", "users", "audit",
+        "notifications", "settings",
+      ]);
+      const isAdmin = () => user?.role === "ADMIN";
+      const canOpenPage = (pageId) => KNOWN_PAGES.has(pageId) &&
+        (!ADMIN_ONLY_PAGES.has(pageId) || isAdmin());
+
       function page() {
+        if (!canOpenPage(state.page)) {
+          state.page = "dashboard";
+          toast("This screen is available to Admin users only.");
+        }
         switch (state.page) {
           case "dashboard":
             return dashboard();
@@ -1048,6 +1062,12 @@
         }
       }
       function go(p) {
+        if (!canOpenPage(p)) {
+          toast(ADMIN_ONLY_PAGES.has(p)
+            ? "This screen is available to Admin users only."
+            : "That screen is not available.");
+          p = "dashboard";
+        }
         state.page = p;
         state.search = "";
         state.error = "";
@@ -1630,12 +1650,14 @@
         );
       }
       window.openUserCreate = () => {
+        if (!isAdmin()) return toast("Only Admin users can manage accounts.");
         openDrawer();
         document.getElementById("drawer").innerHTML =
           `<div class="drawerHeader"><div><div class="eyebrow">USER ADMINISTRATION</div><h2>Create user</h2></div>${button("Close", "closeDrawer()")}</div><form onsubmit="createUserUi(event)"><div class="field"><label>Name</label><input class="search" id="userName" required></div><div class="field"><label>Email</label><input class="search" id="userEmail" type="email" required></div><div class="field"><label>Password</label><input class="search" id="userPassword" type="password" minlength="8" required></div><div class="field"><label>Role</label><select class="select" id="userRole">${USER_ROLES.map((r) => `<option>${r}</option>`).join("")}</select></div><button class="btn primary">Create User</button></form>`;
       };
       window.createUserUi = async (e) => {
         e.preventDefault();
+        if (!isAdmin()) return toast("Only Admin users can manage accounts.");
         try {
           await createUser({
             name: document.getElementById("userName").value.trim(),
@@ -1652,6 +1674,7 @@
         }
       };
       window.openUser = async (id) => {
+        if (!isAdmin()) return toast("Only Admin users can manage accounts.");
         openDrawer();
         const d = document.getElementById("drawer");
         try {
@@ -1662,6 +1685,7 @@
         }
       };
       window.saveUser = async (id) => {
+        if (!isAdmin()) return toast("Only Admin users can manage accounts.");
         try {
           await updateUser(id, {
             name: document.getElementById("editUserName").value.trim(),
@@ -1688,6 +1712,7 @@
         );
       }
       window.openAudit = async (id) => {
+        if (!isAdmin()) return toast("Only Admin users can view audit records.");
         openDrawer();
         const d = document.getElementById("drawer");
         try {
@@ -1762,8 +1787,16 @@
             getAnalyses(),
             getAiJobs(),
           ];
-          if (adminOnly) tasks.push(getUsers(), getAuditLogs(), getSettings());
+          const taskLabels = [
+            "dashboard", "documents", "knowledge", "reviews", "protocols",
+            "versions", "analyses", "AI jobs",
+          ];
+          if (adminOnly) {
+            tasks.push(getUsers(), getAuditLogs(), getSettings());
+            taskLabels.push("users", "audit logs", "settings");
+          }
           tasks.push(getNotifications(), getUnreadNotificationCount());
+          taskLabels.push("notifications", "unread notification count");
           const r = await Promise.allSettled(tasks);
           const val = (i, f) => (r[i].status === "fulfilled" ? r[i].value : f);
           let i = 0;
@@ -1786,8 +1819,16 @@
           }
           state.notifications = val(i++, []);
           state.unreadNotifications = Number(val(i++, 0) || 0);
-          const rejected = r.find((x) => x.status === "rejected");
-          if (rejected) fail(rejected.reason);
+          const failures = r
+            .map((result, index) => ({ result, label: taskLabels[index] }))
+            .filter(({ result }) => result.status === "rejected");
+          if (failures.length) {
+            const labels = failures.map(({ label }) => label);
+            state.error = `${labels.join(", ")} ${labels.length === 1 ? "could not" : "could not"} load. Other sections may still be available.`;
+            failures.forEach(({ label, result }) => {
+              console.warn(`[CARVO Admin] ${label} failed to load:`, result.reason);
+            });
+          }
         } catch (e) {
           fail(e);
         } finally {

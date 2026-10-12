@@ -18,12 +18,35 @@ VITE_API_URL=http://localhost:5000/api
 
 ### Installation & Run
 
+Use Node.js 20.19+ or 22.12+ (matching Vite 7 requirements).
+
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
 The app will be available at: `http://localhost:5173/`
+
+---
+
+## Vercel Deployment
+
+This is a Vite multi-page application. Import the repository into Vercel with the project root as the **Root Directory** and use:
+
+- **Framework Preset:** Vite
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Install Command:** `npm ci`
+- **Node.js:** `^20.19.0 || >=22.12.0`
+- **Production Branch:** the branch you intend to deploy (currently `Api-integeration` if that is the configured Vercel branch)
+
+In **Vercel → Project → Settings → Environment Variables**, add `VITE_API_URL` for Production (and Preview if needed). Set its value to the public backend API base URL, for example `https://api.carvoai.com/api` only if that is the correct live backend URL for your environment. Because the name starts with `VITE_`, it is embedded in browser-side code; it must contain only a public base URL, never a password, API key, or private credential. Redeploy after changing it.
+
+The production build runs `scripts/verify-vercel-build.mjs` after Vite and fails if any page or required runtime asset is absent. The Minister workspace depends on a custom `x-dc` runtime. `vite.config.js` copies its JavaScript and CSS into matching `/src/...` paths in the production output and fails the build if a required source file is missing. Do not configure an SPA rewrite that sends every path to `/index.html`: the project has separate `/login.html`, `/admin/index.html`, `/minister/index.html`, and `/minister/records.html` pages.
+
+Before client demos, test one real login for each role, all three runtime asset URLs, direct loading of each page, and the browser Network/Console tabs. The backend must allow the deployed Vercel origin through CORS and enforce role permissions server-side. Frontend role guards are only a usability layer, not an authorization boundary.
+
+Do not commit or upload `.env`; configure the public `VITE_API_URL` value in Vercel. The provided archive's old `dist/` output is generated and should not be relied on; Vercel should build a fresh `dist/` from the committed source.
 
 ---
 

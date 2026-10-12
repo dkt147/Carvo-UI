@@ -8,9 +8,11 @@ const isAdminArea = /\/admin(?:\/|$)/.test(path);
 const isMinisterArea = /\/minister(?:\/|$)/.test(path);
 const isLogin = /\/login\.html$/.test(path) || path.endsWith('/login');
 
+const VALID_ROLES = new Set(['ADMIN', 'REVIEWER', 'MINISTER']);
 const roleHome = (role) => role === 'MINISTER' ? '/minister/index.html' : '/admin/index.html';
 
-if (!token || !user?.role) {
+if (!token || !user?.role || !VALID_ROLES.has(user.role)) {
+  clearSession();
   if (!isLogin) window.location.replace('/login.html');
 } else if (isLogin) {
   window.location.replace(roleHome(user.role));
