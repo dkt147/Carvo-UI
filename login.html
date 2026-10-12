@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CARVO — Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,400&family=Frank+Ruhl+Libre:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #fcfcfb;
+        --wash: #f9f9f7;
+        --ink: #2e2c27;
+        --soft: #6b6a63;
+        --grey: #b4b3a8;
+        --hair: #e4e3dc;
+        --clay: #c6613f;
+        --clay-h: #ae5133;
+        --danger: #9c3d32;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Source Serif 4", Georgia, serif;
+      }
+      main {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 32px 20px;
+      }
+      .wrap {
+        width: min(470px, 100%);
+      }
+      .brand {
+        font-size: 23px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+      }
+      .tag {
+        font-size: 12px;
+        color: var(--grey);
+        margin-top: 5px;
+      }
+      .rule {
+        height: 1px;
+        background: var(--hair);
+        margin: 30px 0 48px;
+      }
+      .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.13em;
+        color: var(--grey);
+      }
+      h1 {
+        font-size: 40px;
+        line-height: 1.15;
+        margin: 8px 0 10px;
+        font-weight: 500;
+      }
+      .sub {
+        font-size: 14px;
+        color: var(--soft);
+        line-height: 1.7;
+        margin-bottom: 30px;
+      }
+      .form {
+        border-top: 1px solid var(--hair);
+        border-bottom: 1px solid var(--hair);
+        padding: 25px 0;
+      }
+      .field {
+        margin-bottom: 18px;
+      }
+      .field label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 7px;
+        color: var(--soft);
+      }
+      .field input {
+        width: 100%;
+        border: 1px solid var(--hair);
+        background: #fff;
+        padding: 12px 13px;
+        border-radius: 6px;
+        color: var(--ink);
+        font:
+          14px "Source Serif 4",
+          Georgia,
+          serif;
+        outline: none;
+      }
+      .field input:focus {
+        border-color: var(--clay);
+      }
+      .passwordWrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .passwordWrapper input {
+        flex: 1;
+        padding-right: 40px;
+      }
+      .togglePassword {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--soft);
+        font-size: 18px;
+      }
+      .togglePassword:hover {
+        color: var(--ink);
+      }
+      button {
+        width: 100%;
+        border: 1px solid var(--clay);
+        background: var(--clay);
+        color: #fff;
+        border-radius: 7px;
+        padding: 12px 16px;
+        font:
+          13px "Source Serif 4",
+          Georgia,
+          serif;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--clay-h);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: wait;
+      }
+      .error {
+        display: none;
+        border: 1px solid #e8c8c3;
+        background: #fff8f6;
+        color: var(--danger);
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 17px;
+      }
+      .error.show {
+        display: block;
+      }
+      .hint {
+        font-size: 11px;
+        color: var(--grey);
+        margin-top: 20px;
+        line-height: 1.6;
+      }
+      .back {
+        display: inline-block;
+        margin-top: 22px;
+        color: var(--soft);
+        font-size: 12px;
+        text-decoration: none;
+      }
+      .back:hover {
+        color: var(--ink);
+      }
+    </style>
+    <script type="module" src="/src/auth-guard.js"></script>
+  </head>
+  <body>
+    <main>
+      <div class="wrap">
+        <div class="brand">CARVO</div>
+        <div class="tag">Knowledge · Analysis · Action</div>
+        <div class="rule"></div>
+        <h1>Sign in</h1>
+        <div class="sub">
+          Enter your CARVO credentials. Your account role determines which
+          workspace you enter.
+        </div>
+        <form class="form" id="loginForm" novalidate>
+          <div class="error" id="errorBox"></div>
+          <div class="field">
+            <label for="email">EMAIL</label
+            ><input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="username"
+              required
+            />
+          </div>
+          <div class="field">
+            <label for="password">PASSWORD</label>
+            <div class="passwordWrapper">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" class="togglePassword" id="togglePasswordBtn" onclick="togglePasswordVisibility(event)">👁</button>
+            </div>
+          </div>
+          <button id="submitButton" type="submit">Sign in →</button>
+        </form>
+        <div class="hint">
+          Admin and Reviewer accounts enter the administration workspace.
+          Minister accounts enter the CARVO user workspace.
+        </div>
+        <a class="back" href="/">← Back to experience selection</a>
+      </div>
+    </main>
+    <script type="module">
+      import { login } from "/src/api/auth.api.js";
+
+      const form = document.getElementById("loginForm");
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const button = document.getElementById("submitButton");
+      const errorBox = document.getElementById("errorBox");
+      const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+
+      window.togglePasswordVisibility = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        const isPassword = password.type === "password";
+        password.type = isPassword ? "text" : "password";
+        togglePasswordBtn.textContent = isPassword ? "🙈" : "👁";
+      };
+
+      const showError = (message) => {
+        errorBox.textContent = message;
+        errorBox.classList.add("show");
+      };
+      const clearError = () => {
+        errorBox.textContent = "";
+        errorBox.classList.remove("show");
+      };
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        clearError();
+        const emailValue = email.value.trim();
+        const passwordValue = password.value;
+        if (!emailValue || !passwordValue)
+          return showError("Email and password are required.");
+
+        button.disabled = true;
+        togglePasswordBtn.disabled = true;
+        button.textContent = "Signing in…";
+        try {
+          const user = await login(emailValue, passwordValue);
+          window.location.replace(
+            user.role === "MINISTER"
+              ? "/minister/index.html"
+              : "/admin/index.html",
+          );
+        } catch (error) {
+          showError(error.message || "Unable to sign in. Please try again.");
+          button.disabled = false;
+          togglePasswordBtn.disabled = false;
+          button.textContent = "Sign in →";
+        }
+      });
+    </script>
+  </body>
+</html>

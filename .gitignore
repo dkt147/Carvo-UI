@@ -1,0 +1,33 @@
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Generated Prisma client
+/src/generated/prisma/
+
+# Logs and test coverage
+*.log
+logs/
+coverage/
+.nyc_output/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor and operating system files
+.idea/
+.vscode/
+.agents/
+.claude/
+.windsurf/
+.DS_Store
+Thumbs.db

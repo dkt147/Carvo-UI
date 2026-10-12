@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CARVO — Events & Outcomes</title>
+  <script type="module" src="/src/auth-guard.js"></script>
+  <script type="module" src="/src/api/minister.api.js"></script>
+  <script type="module" src="/src/role-ui.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#fcfcfb;--wash:#f9f9f7;--ink:#2e2c27;--soft:#6b6a63;--grey:#b4b3a8;--hair:#e4e3dc;--clay:#c6613f;--tint:#f6eae4;--danger:#9c3d32;--green:#68765f}
+    *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.6 "Source Serif 4",Georgia,serif}a{color:var(--clay)}button,input,select,textarea{font:inherit}button{cursor:pointer}.top{height:58px;border-bottom:1px solid var(--hair);display:flex;align-items:center;padding:0 26px;gap:18px;position:sticky;top:0;background:var(--paper);z-index:5}.brand{font-size:20px;font-weight:600;letter-spacing:.16em}.muted{color:var(--soft)}.wrap{max-width:1180px;margin:auto;padding:38px 28px 70px}.eyebrow{font-size:10px;letter-spacing:.14em;color:var(--grey)}h1{font-size:34px;font-weight:500;margin:6px 0}h2{font-size:19px;font-weight:500;margin:0 0 16px}.head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}.btn{border:1px solid var(--hair);background:white;border-radius:7px;padding:8px 12px;color:var(--ink)}.primary{background:var(--clay);border-color:var(--clay);color:white}.danger{color:var(--danger)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.panel{border:1px solid var(--hair);border-radius:10px;background:#fff;padding:20px;min-width:0}.field{margin-bottom:13px}.field label{display:block;font-size:12px;color:var(--soft);margin-bottom:5px}.field input,.field select,.field textarea{width:100%;padding:10px 11px;border:1px solid var(--hair);border-radius:6px;background:white;color:var(--ink);min-width:0}.field textarea{min-height:78px;resize:vertical}.notice{display:none;padding:12px 14px;border:1px solid var(--hair);border-radius:8px;margin:0 0 18px;background:var(--wash)}.notice.show{display:block}.notice.error{border-color:#e8c8c3;background:#fff8f6;color:var(--danger)}.section{margin-top:28px}.table{border:1px solid var(--hair);border-radius:9px;overflow:hidden}.row{display:grid;grid-template-columns:minmax(170px,1.2fr) minmax(150px,1fr) minmax(160px,1fr) auto;gap:14px;padding:12px 14px;border-top:1px solid var(--hair);align-items:center;overflow-wrap:anywhere}.row:first-child{border-top:0}.row.head{background:var(--wash);font-size:11px;letter-spacing:.08em;color:var(--soft);text-transform:uppercase}.empty{padding:24px;color:var(--soft);text-align:center}.badge{display:inline-block;background:var(--wash);border:1px solid var(--hair);padding:2px 7px;border-radius:5px;font-size:11px}.inline{display:flex;gap:8px;flex-wrap:wrap}.inline>*{flex:1}.back{color:var(--soft);font-size:12px}@media(max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:28px 16px}.row{grid-template-columns:1fr 1fr}.row.head{display:none}.head{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<header class="top"><a href="/minister/index.html" class="back">← Minister workspace</a><div class="brand">CARVO</div><div class="muted">EVENTS · RESULTS · FEEDBACK</div></header>
+<main class="wrap">
+  <div class="head"><div><div class="eyebrow">MINISTER WORKSPACE</div><h1>Events & outcomes</h1><div class="muted">Record what happened, connect it to the relevant CARVO work, then record results and feedback. Dropdowns show names; the API receives the associated IDs.</div></div><button class="btn" id="refreshBtn">Refresh records</button></div>
+  <div id="notice" class="notice"></div>
+  <div class="grid">
+    <section class="panel"><h2>Record an event</h2><form id="eventForm">
+      <div class="field"><label for="eventType">Event type</label><select id="eventType" required><option value="STATEMENT">Statement</option><option value="INTENTION">Intention</option><option value="PROMISE">Promise</option><option value="MEETING">Meeting</option><option value="DECISION">Decision</option><option value="PLAN">Plan</option><option value="ACTION">Action</option><option value="MILESTONE">Milestone</option><option value="PROJECT_UPDATE">Project update</option><option value="OTHER">Other</option></select></div>
+      <div class="field"><label for="eventTitle">Title</label><input id="eventTitle" required maxlength="180"></div><div class="field"><label for="eventDescription">Description</label><textarea id="eventDescription"></textarea></div><div class="field"><label for="occurredAt">When did it occur? (optional)</label><input id="occurredAt" type="datetime-local"></div>
+      <div class="field"><label for="eventProject">Project (optional)</label><select id="eventProject"><option value="">No project</option></select></div><div class="field"><label for="eventSituation">Situation (optional)</label><select id="eventSituation"><option value="">No situation</option></select></div><div class="field"><label for="eventAction">Action (optional)</label><select id="eventAction"><option value="">No action</option></select></div><div class="field"><label for="eventMilestone">Milestone (optional)</label><select id="eventMilestone"><option value="">No milestone</option></select></div><button class="btn primary" type="submit">Save event</button>
+    </form></section>
+    <section class="panel"><h2>Record a result</h2><form id="resultForm"><div class="field"><label for="resultEvent">Related event</label><select id="resultEvent" required><option value="">Select event…</option></select></div><div class="field"><label for="resultTitle">Result title</label><input id="resultTitle" required maxlength="180"></div><div class="field"><label for="resultDescription">What happened?</label><textarea id="resultDescription"></textarea></div><div class="field"><label for="resultStatus">Status</label><select id="resultStatus"><option value="RECORDED">Recorded</option><option value="REVIEWED">Reviewed</option></select></div><button class="btn primary" type="submit">Save result</button></form></section>
+    <section class="panel"><h2>Add feedback</h2><form id="feedbackForm"><div class="field"><label for="feedbackResult">Related result</label><select id="feedbackResult" required><option value="">Select result…</option></select></div><div class="field"><label for="feedbackType">Feedback type</label><select id="feedbackType"><option value="OBSERVATION">Observation</option><option value="CORRECTION">Correction</option><option value="CONFIRMATION">Confirmation</option><option value="OTHER">Other</option></select></div><div class="field"><label for="feedbackContent">Feedback / correction</label><textarea id="feedbackContent" required></textarea></div><button class="btn primary" type="submit">Save feedback</button></form></section>
+  </div>
+  <section class="section"><h2>Events</h2><div class="table" id="eventsTable"><div class="empty">Loading events…</div></div></section>
+  <section class="section"><h2>Results</h2><div class="table" id="resultsTable"><div class="empty">Loading results…</div></div></section>
+  <section class="section"><h2>Feedback</h2><div class="table" id="feedbackTable"><div class="empty">Loading feedback…</div></div></section>
+</main>
+<script type="module">
+  import { getMinisterDashboard, createMinisterEvent, createMinisterResult, createMinisterFeedback, deleteMinisterEvent, deleteMinisterResult, deleteMinisterFeedback, updateMinisterResultStatus } from '/src/api/minister.api.js';
+  const $ = (id) => document.getElementById(id);
+  let data = {events:[],results:[],feedback:[],projects:[],situations:[],actions:[]};
+  const esc = (v) => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const date = (v) => { if(!v) return '—'; const d = new Date(v); return Number.isNaN(d.getTime()) ? String(v) : d.toLocaleString(); };
+  function notify(message, error=false){ const n=$('notice'); n.textContent=message; n.className='notice show'+(error?' error':''); window.scrollTo({top:0,behavior:'smooth'}); }
+  function fillSelect(id, rows, labelFn, firstLabel){ const sel=$(id), old=sel.value; sel.innerHTML=`<option value="">${esc(firstLabel)}</option>`+rows.map(r=>`<option value="${esc(r.id)}">${esc(labelFn(r))}</option>`).join(''); if(rows.some(r=>r.id===old)) sel.value=old; }
+  function renderTable(id, rows, kind){
+    const el=$(id); if(!rows.length){el.innerHTML='<div class="empty">No records yet.</div>';return;}
+    const head = kind==='event' ? ['Event','Type','Related records',''] : kind==='result' ? ['Result','Status','Related event',''] : ['Feedback','Type','Related result',''];
+    const body=rows.map(r=>{
+      let title=r.title||r.content||'Record', meta= date(r.occurredAt||r.createdAt), second='', third='', action='';
+      if(kind==='event'){second=`<span class="badge">${esc(r.type)}</span>`;third=[r.project?.name,r.situation?.title,r.action?.title,r.milestone?.title].filter(Boolean).join(' · ')||'—';action=`<button class="btn danger" data-delete-event="${esc(r.id)}">Delete</button>`;}
+      if(kind==='result'){second=`<span class="badge">${esc(r.status||'RECORDED')}</span>`;third=esc(r.event?.title||r.eventId||'—');action=`<div class="inline"><select aria-label="Result status" data-result-status="${esc(r.id)}"><option value="RECORDED" ${r.status==='RECORDED'?'selected':''}>Recorded</option><option value="REVIEWED" ${r.status==='REVIEWED'?'selected':''}>Reviewed</option></select><button class="btn danger" data-delete-result="${esc(r.id)}">Delete</button></div>`;}
+      if(kind==='feedback'){second=`<span class="badge">${esc(r.type)}</span>`;third=esc(r.result?.title||r.resultId||'—');action=`<button class="btn danger" data-delete-feedback="${esc(r.id)}">Delete</button>`;}
+      return `<div class="row"><div><strong>${esc(title)}</strong><div class="muted">${esc(meta)}</div></div><div>${second}</div><div>${third}</div><div>${action}</div></div>`;
+    }).join('');
+    el.innerHTML=`<div class="row head"><div>${head[0]}</div><div>${head[1]}</div><div>${head[2]}</div><div>${head[3]}</div></div>${body}`;
+  }
+  async function load(){
+    $('refreshBtn').disabled=true;
+    try{
+      const d=await getMinisterDashboard(); data={...data,...d};
+      fillSelect('eventProject',data.projects||[],x=>`${x.name} · ${String(x.status||'').replace(/_/g,' ')}`,'No project');
+      fillSelect('eventSituation',data.situations||[],x=>x.title||x.id,'No situation');
+      fillSelect('eventAction',data.actions||[],x=>x.title||x.id,'No action');
+      const milestones=(data.projects||[]).flatMap(p=>(p.milestones||[]).map(m=>({...m,projectName:p.name})));
+      fillSelect('eventMilestone',milestones,x=>`${x.title} · ${x.projectName||'Project'}`,'No milestone');
+      fillSelect('resultEvent',data.events||[],x=>`${x.title} · ${date(x.occurredAt||x.createdAt)}`,'Select event…');
+      fillSelect('feedbackResult',data.results||[],x=>`${x.title} · ${String(x.status||'RECORDED')}`,'Select result…');
+      renderTable('eventsTable',data.events||[],'event');renderTable('resultsTable',data.results||[],'result');renderTable('feedbackTable',data.feedback||[],'feedback');
+    }catch(e){notify(e?.message||'Could not load records from CARVO API.',true)}finally{$('refreshBtn').disabled=false;}
+  }
+  $('refreshBtn').addEventListener('click',load);
+  $('eventForm').addEventListener('submit',async e=>{e.preventDefault();try{const occurred=$('occurredAt').value;await createMinisterEvent({type:$('eventType').value,title:$('eventTitle').value.trim(),description:$('eventDescription').value.trim(),occurredAt:occurred?new Date(occurred).toISOString():undefined,projectId:$('eventProject').value||undefined,situationId:$('eventSituation').value||undefined,actionId:$('eventAction').value||undefined,milestoneId:$('eventMilestone').value||undefined});e.target.reset();notify('Event saved.');await load()}catch(x){notify(x?.message||'Could not save event.',true)}});
+  $('resultForm').addEventListener('submit',async e=>{e.preventDefault();try{await createMinisterResult({eventId:$('resultEvent').value,title:$('resultTitle').value.trim(),description:$('resultDescription').value.trim(),status:$('resultStatus').value});e.target.reset();notify('Result saved.');await load()}catch(x){notify(x?.message||'Could not save result.',true)}});
+  $('feedbackForm').addEventListener('submit',async e=>{e.preventDefault();try{await createMinisterFeedback({resultId:$('feedbackResult').value,type:$('feedbackType').value,content:$('feedbackContent').value.trim()});e.target.reset();notify('Feedback saved.');await load()}catch(x){notify(x?.message||'Could not save feedback.',true)}});
+  document.body.addEventListener('click',async e=>{const b=e.target.closest('[data-delete-event],[data-delete-result],[data-delete-feedback]');if(!b)return;if(!confirm('Delete this record? This cannot be undone.'))return;try{if(b.dataset.deleteEvent)await deleteMinisterEvent(b.dataset.deleteEvent);if(b.dataset.deleteResult)await deleteMinisterResult(b.dataset.deleteResult);if(b.dataset.deleteFeedback)await deleteMinisterFeedback(b.dataset.deleteFeedback);notify('Record deleted.');await load()}catch(x){notify(x?.message||'Could not delete record.',true)}});
+  document.body.addEventListener('change',async e=>{const id=e.target.dataset.resultStatus;if(!id)return;try{await updateMinisterResultStatus(id,e.target.value);notify('Result status updated.');await load()}catch(x){notify(x?.message||'Could not update result status.',true)}});
+  load();
+</script>
+</body></html>
